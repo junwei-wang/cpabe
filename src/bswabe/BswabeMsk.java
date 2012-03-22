@@ -18,10 +18,12 @@ public class BswabeMsk implements Serializable{
 	
 	private void writeObject(ObjectOutputStream stream) throws IOException, ClassNotFoundException {
 		byte[] b_beta = beta.toBytes();
-		byte[] b_g_alpha = g_alpha.toBytes();
+		beta.setFromBytes(b_beta);
+	//	byte[] b_g_alpha = g_alpha.toBytes();
 	
 		System.out.println(b_beta);
-		stream.writeObject(bytesToObject(b_beta));
+		//stream.writeObject(bytesToObject(b_beta));
+		stream.writeObject(b_beta);
 		//stream.writeObject(b_g_alpha);
 	}
 	
@@ -29,6 +31,7 @@ public class BswabeMsk implements Serializable{
 	
 		byte[] b_beta = objectToBytes(stream.readObject());
 		System.out.println(b_beta);
+		
 		beta.setFromBytes(b_beta);
 		
 	}
@@ -63,7 +66,6 @@ public class BswabeMsk implements Serializable{
 		obj = in.readObject();
 		bi.close();
 		in.close();
-		
 		return obj;
 	}
 }
