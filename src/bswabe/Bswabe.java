@@ -3,6 +3,9 @@ package bswabe;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 
 import com.sun.java_cup.internal.runtime.Scanner;
 
@@ -14,6 +17,7 @@ import it.unisa.dia.gas.plaf.jpbc.pairing.PairingFactory;
 import it.unisa.dia.gas.plaf.jpbc.pairing.a.TypeACurveGenerator;
 
 public class Bswabe {
+
 	public static void setup(BswabePub pub, BswabeMsk msk) {
 		Element alpha;
 
@@ -122,6 +126,169 @@ public class Bswabe {
 		fillPolicy(cph.p, pub, s);
 
 		return cph;
+	}
+
+	public static boolean dec(BswabePub pub, BswabePrv prv, BswabeCph cph,
+			Element m) {
+		Element t;
+
+		m = pub.p.getGT().newElement();
+		t = pub.p.getGT().newElement();
+
+		checkSatisfy(cph.p, prv);
+		if (!cph.p.satisfiable) {
+			System.out
+					.println("cannot decrypt, attributes in key do not satisfy policy");
+			return false;
+		}
+
+		pickSatisfyMinLeaves(cph.p, prv);
+
+		decFlatten(t, cph.p, prv, pub);
+
+		m = cph.cs.mul(t); /* num_muls++; */
+		
+		t= pub.p.pairing(cph.c, prv.d);
+		t=t.invert();
+		m = m.mul(t);
+
+		return true;
+	}
+
+	private static void decFlatten(Element r, BswabePolicy p, BswabePrv prv,
+			BswabePub pub) {
+		Element one;
+		one = pub.p.getZr().newElement();
+		one.setToOne();
+		r.setToOne();
+
+		decNodeFlatten(r, one, p, prv, pub);
+	}
+
+	private static void decNodeFlatten(Element r, Element exp, BswabePolicy p,
+			BswabePrv prv, BswabePub pub) {
+		if (p.children.length == 0)
+			decLeafFlatten(r, exp, p, prv, pub);
+		else
+			decInternalFlatten(r, exp, p, prv, pub);
+	}
+
+	private static void decLeafFlatten(Element r, Element exp, BswabePolicy p,
+			BswabePrv prv, BswabePub pub) {
+		BswabePrvComp c;
+		Element s, t;
+
+		c = prv.comps.get(p.attri);
+
+		s = pub.p.getGT().newElement();
+		t = pub.p.getGT().newElement();
+
+		s = pub.p.pairing(p.c, c.d); /* num_pairings++; */
+		t = pub.p.pairing(p.cp, c.dp); /* num_pairings++; */
+		t = t.invert();
+		s = s.mul(t); /* num_muls++; */
+		s = s.powZn(exp); /* num_exps++; */
+
+		r = r.mul(s); /* num_muls++; */
+	}
+
+	private static void decInternalFlatten(Element r, Element exp,
+			BswabePolicy p, BswabePrv prv, BswabePub pub) {
+		int i;
+		Element t, expnew;
+
+		t = pub.p.getZr().newElement();
+		expnew = pub.p.getZr().newElement();
+
+		for (i = 0; i < p.satl.size(); i++) {
+			lagrangeCoef(t, p.satl, (p.satl.get(i)).intValue());
+			expnew = exp.mul(t);
+			decNodeFlatten(r, expnew, p.children[p.satl.get(i) - 1], prv, pub);
+		}
+	}
+
+	private static void lagrangeCoef(Element r, ArrayList<Integer> s, int i) {
+		int j, k;
+		Element t;
+
+		t = r.duplicate();
+
+		r.setToOne();
+		for (k = 0; k < s.size(); k++) {
+			j = s.get(k).intValue();
+			if (j == i)
+				continue;
+			t.set(-j);
+			r = r.mul(t); /* num_muls++; */
+			t.set(i - j);
+			t = t.invert();
+			r = r.mul(t); /* num_muls++; */
+		}
+	}
+
+	private static void pickSatisfyMinLeaves(BswabePolicy p, BswabePrv prv) {
+		int i, k, l, c_i;
+		int len;
+		BswabePolicy curCompPol;
+		ArrayList<Integer> c = new ArrayList<Integer>();
+
+		len = p.children.length;
+		if (len == 0)
+			p.min_leaves = 1;
+		else {
+			for (i = 0; i < len; i++)
+				if (p.children[i].satisfiable)
+					pickSatisfyMinLeaves(p.children[i], prv);
+
+			for (i = 0; i < len; i++)
+				c.add(new Integer(i));
+
+			curCompPol = p;
+			Collections.sort(c, new IntegerComparator(curCompPol));
+
+			// p.satl = new String[];
+			p.min_leaves = 0;
+			l = 0;
+
+			for (i = 0; i < len && l < p.k; i++) {
+				c_i = c.get(i).intValue(); /* c[i] */
+				if (p.children[c_i].satisfiable) {
+					l++;
+					p.min_leaves += p.children[c_i].min_leaves;
+					k = c_i + 1;
+					p.satl.add(new Integer(k));
+				}
+			}
+		}
+	}
+
+	private static void checkSatisfy(BswabePolicy p, BswabePrv prv) {
+		int i, l;
+		String prvAttr;
+
+		p.satisfiable = false;
+		if (p.children.length == 0) {
+			for (i = 0; i < prv.comps.size(); i++) {
+				prvAttr = prv.comps.get(i).attr;
+				// TODO check if it is right
+				if (prvAttr.compareTo(p.attr) == 0) {
+					p.satisfiable = true;
+					p.attri = 1;
+					break;
+				}
+			}
+		} else {
+			for (i = 0; i < p.children.length; i++)
+				checkSatisfy(p.children[i], prv);
+
+			l = 0;
+			for (i = 0; i < p.children.length; i++)
+				if (p.children[i].satisfiable)
+					l++;
+
+			if (l >= p.k)
+				p.satisfiable = true;
+		}
 	}
 
 	private static void fillPolicy(BswabePolicy p, BswabePub pub, Element e)
@@ -274,5 +441,23 @@ public class Bswabe {
 		MessageDigest md = MessageDigest.getInstance("SHA-1");
 		byte[] digest = md.digest(s.getBytes());
 		h.setFromHash(digest, 0, digest.length);
+	}
+
+	static class IntegerComparator implements Comparator<Integer> {
+		BswabePolicy policy;
+
+		public IntegerComparator(BswabePolicy p) {
+			this.policy = p;
+		}
+
+		@Override
+		public int compare(Integer o1, Integer o2) {
+			int k, l;
+
+			k = policy.children[o1.intValue()].min_leaves;
+			l = policy.children[o2.intValue()].min_leaves;
+
+			return (k <= l) ? 0 : 1;
+		}
 	}
 }

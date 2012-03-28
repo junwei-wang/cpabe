@@ -1,5 +1,7 @@
 package bswabe;
 
+import java.util.ArrayList;
+
 import it.unisa.dia.gas.jpbc.Element;
 
 public class BswabePolicy {
@@ -18,8 +20,8 @@ public class BswabePolicy {
 	BswabePolynomial q;
 
 	/* only used during decription */
-	int satisfiable;
+	boolean satisfiable;
 	int min_leaves;
 	int attri;
-	String[] satl;
+	ArrayList<Integer> satl = new ArrayList<Integer>();
 }

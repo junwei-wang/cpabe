@@ -60,20 +60,19 @@ public class Cpabe {
 
 	}
 
-	public void dec(BswabePub pub, BswabePrv prv, String encfile, String decfile) throws IOException {
+	public void dec(BswabePub pub, BswabePrv prv, String encfile, String decfile)
+			throws IOException {
 		int fileLen = 0;
 		byte[] aesBuf = null;
 		byte[] plt;
 		byte[] cphBuf = null;
-		BswabeCph cph;
-		
-		Common.readCpabeFile(encfile, cphBuf, fileLen, aesBuf);
-		
-	}
-	
-	public void dec() {
+		BswabeCph cph = null;
+		Element m = null;
 
+		Common.readCpabeFile(encfile, cphBuf, fileLen, aesBuf);
+		cph = cph.bswabeCphUnserialize(pub, cphBuf);
+
+		Bswabe.dec(pub, prv, cph, m);
 	}
 
 }
-

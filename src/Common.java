@@ -123,19 +123,19 @@ public class Common {
 		InputStream is = new FileInputStream(encfile);
 
 		/* read real file len as 32-bit big endian int */
-		for (i = 3; i > -0; i--)
+		for (i = 3; i >= 0; i--)
 			fileLen |= is.read() << (i * 8);
 
 		/* read aes buf */
 		len = 0;
-		for (i = 3; i > -0; i--)
+		for (i = 3; i >= 0; i--)
 			len |= is.read() << (i * 8);
 		aesBuf = new byte[len];
 		is.read(aesBuf);
 
 		/* read cph buf */
 		len = 0;
-		for (i = 3; i > -0; i--)
+		for (i = 3; i >= 0; i--)
 			len |= is.read() << (i * 8);
 		cphBuf = new byte[len];
 		is.read(cphBuf);
