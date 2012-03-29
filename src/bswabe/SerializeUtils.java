@@ -73,7 +73,7 @@ public class SerializeUtils {
 		return p;
 	}
 
-	private static int unserializeString(byte[] arr, int offset, StringBuffer sb) {
+	public static int unserializeString(byte[] arr, int offset, StringBuffer sb) {
 		int i;
 		int len;
 		byte[] str_byte;
@@ -88,7 +88,7 @@ public class SerializeUtils {
 		return offset + len;
 	}
 
-	private static void serializeString(ArrayList<Byte> arrlist, String s) {
+	public static void serializeString(ArrayList<Byte> arrlist, String s) {
 		byte[] b = s.getBytes();
 		serializeUint32(arrlist, (int) b.length);
 		byteArrListAppend(arrlist, b);
@@ -120,4 +120,38 @@ public class SerializeUtils {
 		for (int i = 0; i < len; i++)
 			arrlist.add(Byte.valueOf(b[i]));
 	}
+
+	private static byte[] serializeBswabePub(BswabePub pub) {
+		ArrayList<Byte> arrlist = new ArrayList<Byte>();
+		// TODO
+		// serializeString(arrlist, pub.);
+
+		return null;
+
+	}
+
+	public static byte[] serializeBswabeMsk(BswabeMsk msk) {
+		ArrayList<Byte> arrlist = new ArrayList<Byte>();
+		serializeElement(arrlist, msk.beta);
+		serializeElement(arrlist, msk.beta);
+		int len = arrlist.size();
+		byte[] res = new byte[len];
+		for (int i = 0; i < len; i++)
+			res[i] = arrlist.get(i).byteValue();
+		return res;
+	}
+
+	public static BswabeMsk unserializeBswabeMsk(BswabePub pub, byte[] b) {
+		int offset = 0;
+		BswabeMsk msk = new BswabeMsk();
+
+		msk.beta = pub.p.getZr().newElement();
+		msk.g_alpha = pub.p.getG2().newElement();
+
+		offset = unserializeElement(b, offset, msk.beta);
+		offset = unserializeElement(b, offset, msk.g_alpha);
+		
+		return msk;
+	}
+
 }

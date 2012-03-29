@@ -19,22 +19,23 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 public class Common {
-	public static void writeIntoFile(Object obj, String path)
-			throws IOException {
-		FileOutputStream outputStream = new FileOutputStream(path);
-		ObjectOutputStream out = new ObjectOutputStream(outputStream);
-		out.writeObject(obj);
-		out.close();
-	}
+	// public static void writeIntoFile(Object obj, String path)
+	// throws IOException {
+	// FileOutputStream outputStream = new FileOutputStream(path);
+	// ObjectOutputStream out = new ObjectOutputStream(outputStream);
+	// out.writeObject(obj);
+	// out.close();
+	// }
+	//
+	// public static void readFromFile(Object obj, String path)
+	// throws IOException, ClassNotFoundException {
+	// FileInputStream inputStream = new FileInputStream(path);
+	// ObjectInputStream in = new ObjectInputStream(inputStream);
+	// obj = in.readObject();
+	// in.close();
+	// }
 
-	public static void readFromFile(Object obj, String path)
-			throws IOException, ClassNotFoundException {
-		FileInputStream inputStream = new FileInputStream(path);
-		ObjectInputStream in = new ObjectInputStream(inputStream);
-		obj = in.readObject();
-		in.close();
-	}
-
+	/* read byte[] from inputfile */
 	public static byte[] suckFile(String inputfile) throws IOException {
 		InputStream is = new FileInputStream(inputfile);
 		int size = is.available();
@@ -44,6 +45,13 @@ public class Common {
 
 		is.close();
 		return content;
+	}
+
+	/* write byte[] into outputfile */
+	public static void spitFile(String outputfile, byte[] b) throws IOException {
+		OutputStream os = new FileOutputStream(outputfile);
+		os.write(b);
+		os.close();
 	}
 
 	public static byte[] AES128CbcEncrypt(byte[] pt, Element k)
@@ -58,7 +66,7 @@ public class Common {
 
 		for (i = 0; i < iv.length; i++)
 			iv[i] = 0;
-		key = initAES(k, iv);
+		key = initAES(k);
 
 		/* TODO make less crutfy */
 
@@ -87,7 +95,7 @@ public class Common {
 		return ct;
 	}
 
-	private static SecretKeySpec initAES(Element k, byte[] iv)
+	private static SecretKeySpec initAES(Element k)
 			throws NoSuchAlgorithmException {
 		byte[] rawkey = k.toBytes();
 		// TODO check
@@ -141,5 +149,40 @@ public class Common {
 		is.read(cphBuf);
 
 		is.close();
+	}
+
+	public static byte[] AES128CbcDecrypt(byte[] ct, Element k)
+			throws NoSuchAlgorithmException, NoSuchPaddingException,
+			InvalidKeyException, InvalidAlgorithmParameterException,
+			IllegalBlockSizeException, BadPaddingException {
+		int i;
+		SecretKeySpec key;
+		byte[] iv = new byte[16];
+		byte[] tmp_pt;
+		byte[] pt;
+		long len;
+
+		for (i = 0; i < iv.length; i++)
+			iv[i] = 0;
+		key = initAES(k);
+
+		tmp_pt = new byte[ct.length];
+
+		Cipher plaintext = Cipher.getInstance("AES/CBC/PKCS5Padding");
+		IvParameterSpec ivspec = new IvParameterSpec(iv);
+		plaintext.init(Cipher.DECRYPT_MODE, key, ivspec);
+		tmp_pt = plaintext.doFinal(ct);
+
+		/* TODO make less crufty */
+
+		/* get real length */
+		len = 0;
+		len = len | (tmp_pt[0] << 24) | (tmp_pt[1] << 16) | (tmp_pt[2] << 8)
+				| tmp_pt[3];
+
+		pt = new byte[(int) len];
+		System.arraycopy(tmp_pt, 4, pt, 0, (int) len);
+
+		return pt;
 	}
 }

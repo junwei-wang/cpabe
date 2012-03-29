@@ -1,17 +1,19 @@
 import it.unisa.dia.gas.jpbc.Element;
 
 import java.io.IOException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.StringTokenizer;
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 import bswabe.Bswabe;
 import bswabe.BswabeCph;
 import bswabe.BswabeMsk;
 import bswabe.BswabePrv;
 import bswabe.BswabePub;
+import bswabe.SerializeUtils;
 
 public class Cpabe {
 
@@ -20,16 +22,34 @@ public class Cpabe {
 	 * @author Junwei Wang(wakemecn@gmail.com)
 	 */
 
-	public void setup(BswabePub pub, BswabeMsk msk) throws IOException,
+	public void setup(String pubfile, String mskfile) throws IOException,
 			ClassNotFoundException {
-		// BswabePub pub = new BswabePub();
-		// BswabeMsk msk = new BswabeMsk();
+		byte[] pub_byte, msk_byte;
+		BswabePub pub = new BswabePub();
+		BswabeMsk msk = new BswabeMsk();
 		Bswabe.setup(pub, msk);
+		
+		msk_byte = SerializeUtils.serializeBswabeMsk(msk);
+		Common.spitFile(mskfile, msk_byte);	
+	}
+
+	public void setup() throws IOException, ClassNotFoundException {
+		setup("pub_key", "master_key");
+	}
+
+	public void setupSpecfyPub(String pubfile) throws IOException,
+			ClassNotFoundException {
+		setup(pubfile, "master_key");
+	}
+
+	public void setupSpecfyMsk(String mskfile) throws IOException,
+			ClassNotFoundException {
+		setup("pub_key", mskfile);
 	}
 
 	public BswabePrv keygen(BswabePub pub, BswabeMsk msk, String attr_str)
 			throws NoSuchAlgorithmException {
-		ArrayList<String> attr_arr = LangPolicy.parseAttribute(attr_str);
+		String[] attr_arr = LangPolicy.parseAttribute(attr_str);
 		BswabePrv prv = Bswabe.keygen(pub, msk, attr_arr);
 		return prv;
 	}
@@ -61,7 +81,9 @@ public class Cpabe {
 	}
 
 	public void dec(BswabePub pub, BswabePrv prv, String encfile, String decfile)
-			throws IOException {
+			throws IOException, InvalidKeyException, NoSuchAlgorithmException,
+			NoSuchPaddingException, InvalidAlgorithmParameterException,
+			IllegalBlockSizeException, BadPaddingException {
 		int fileLen = 0;
 		byte[] aesBuf = null;
 		byte[] plt;
@@ -70,9 +92,13 @@ public class Cpabe {
 		Element m = null;
 
 		Common.readCpabeFile(encfile, cphBuf, fileLen, aesBuf);
-		cph = cph.bswabeCphUnserialize(pub, cphBuf);
+		cph = BswabeCph.bswabeCphUnserialize(pub, cphBuf);
 
 		Bswabe.dec(pub, prv, cph, m);
+
+		plt = Common.AES128CbcDecrypt(aesBuf, m);
+		/* TODO fileLen && plt.length */
+		Common.spitFile(decfile, plt);
 	}
 
 }

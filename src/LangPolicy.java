@@ -4,10 +4,12 @@ import java.util.Comparator;
 import java.util.StringTokenizer;
 
 public class LangPolicy {
-	public static ArrayList<String> parseAttribute(String s) {
+	public static String[] parseAttribute(String s) {
 		ArrayList<String> str_arr = new ArrayList<String>();
 		StringTokenizer st = new StringTokenizer(s);
 		String token;
+		String res[];
+		int len;
 
 		while (st.hasMoreTokens()) {
 			token = st.nextToken();
@@ -28,15 +30,20 @@ public class LangPolicy {
 		}
 
 		Collections.sort(str_arr, new SortByAlphabetic());
-		return str_arr;
-	}
-	
-	
-	private static String parsePoliceLong(String s) {
-		String parsedPolicy = null;
 		
-		return parsedPolicy;
+		len = str_arr.size();
+		res = new String[len];
+		for (int  i =0;i<len;i++)
+			res[i] = str_arr.get(i);
+		return res;
 	}
+	
+	
+//	private static String parsePoliceLong(String s) {
+//		String parsedPolicy = null;
+//		
+//		return parsedPolicy;
+//	}
 
 	static class SortByAlphabetic implements Comparator<String> {
 		@Override

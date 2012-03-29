@@ -1,11 +1,13 @@
 package bswabe;
 
-import java.io.Serializable;
-
 import it.unisa.dia.gas.jpbc.Element;
 import it.unisa.dia.gas.jpbc.Pairing;
 
-public class BswabePub implements Serializable{
+public class BswabePub{
+	/*
+	 * A public key
+	 */
+	int[] pairing_desc;
 	Pairing p;				
 	Element g;				/* G_1 */
 	Element h;				/* G_1 */

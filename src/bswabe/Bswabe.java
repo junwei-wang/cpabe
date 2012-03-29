@@ -3,11 +3,8 @@ package bswabe;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-
-import com.sun.java_cup.internal.runtime.Scanner;
 
 import it.unisa.dia.gas.jpbc.CurveGenerator;
 import it.unisa.dia.gas.jpbc.CurveParameters;
@@ -18,6 +15,9 @@ import it.unisa.dia.gas.plaf.jpbc.pairing.a.TypeACurveGenerator;
 
 public class Bswabe {
 
+	/*
+	 * Generate a public key and corresponding master secret key.
+	 */
 	public static void setup(BswabePub pub, BswabeMsk msk) {
 		Element alpha;
 
@@ -29,9 +29,16 @@ public class Bswabe {
 		CurveGenerator generator = new TypeACurveGenerator(rBits, qBits);
 		CurveParameters params = generator.generate();
 		pub.p = PairingFactory.getPairing(params);
+		System.out.println(params);
 		Pairing pairing = pub.p;
+	
+		
+		//test
+		//pairing.
+	//	params= generator.
+		//test
+		
 
-		// TODO confirm the way to get g/h is right
 		pub.g = pairing.getG1().newElement();
 		pub.h = pairing.getG1().newElement();
 		pub.gp = pairing.getG2().newElement();
@@ -51,8 +58,11 @@ public class Bswabe {
 		pub.g_hat_alpha = pairing.pairing(pub.g, msk.g_alpha);
 	}
 
-	public static BswabePrv keygen(BswabePub pub, BswabeMsk msk,
-			ArrayList<String> attrs) throws NoSuchAlgorithmException {
+	/*
+	 * Generate a private key with the given set of attributes.
+	 */
+	public static BswabePrv keygen(BswabePub pub, BswabeMsk msk, String[] attrs)
+			throws NoSuchAlgorithmException {
 		BswabePrv prv = new BswabePrv();
 		Element g_r, r, beta_inv;
 		Pairing pairing;
@@ -69,18 +79,17 @@ public class Bswabe {
 		g_r = pub.gp.powZn(r);
 
 		prv.d = msk.g_alpha.mul(g_r);
-		// TODO invert method
 		beta_inv = msk.beta.invert();
 		prv.d = prv.d.powZn(beta_inv);
 
-		int i, len = attrs.size();
+		int i, len = attrs.length;
 		prv.comps = new ArrayList<BswabePrvComp>();
 		for (i = 0; i < len; i++) {
 			BswabePrvComp comp = new BswabePrvComp();
 			Element h_rp;
 			Element rp;
 
-			comp.attr = attrs.get(i);
+			comp.attr = attrs[i];
 
 			comp.d = pairing.getG2().newElement();
 			comp.dp = pairing.getG1().newElement();
@@ -101,6 +110,30 @@ public class Bswabe {
 		return prv;
 	}
 
+	/*
+	 * Pick a random group element and encrypt it under the specified access
+	 * policy. The resulting ciphertext is returned and the Element given as an
+	 * argument (which need not be initialized) is set to the random group
+	 * element.
+	 * 
+	 * After using this function, it is normal to extract the random data in m
+	 * using the pbc functions element_length_in_bytes and element_to_bytes and
+	 * use it as a key for hybrid encryption.
+	 * 
+	 * The policy is specified as a simple string which encodes a postorder
+	 * traversal of threshold tree defining the access policy. As an example,
+	 * 
+	 * "foo bar fim 2of3 baf 1of2"
+	 * 
+	 * specifies a policy with two threshold gates and four leaves. It is not
+	 * possible to specify an attribute with whitespace in it (although "_" is
+	 * allowed).
+	 * 
+	 * Numerical attributes and any other fancy stuff are not supported.
+	 * 
+	 * Returns null if an error occured, in which case a description can be
+	 * retrieved by calling bswabe_error().
+	 */
 	public static BswabeCph enc(BswabePub pub, Element m, String policy)
 			throws Exception {
 		BswabeCph cph = new BswabeCph();
@@ -128,6 +161,13 @@ public class Bswabe {
 		return cph;
 	}
 
+	/*
+	 * Decrypt the specified ciphertext using the given private key, filling in
+	 * the provided element m (which need not be initialized) with the result.
+	 * 
+	 * Returns true if decryption succeeded, false if this key does not satisfy
+	 * the policy of the ciphertext (in which case m is unaltered).
+	 */
 	public static boolean dec(BswabePub pub, BswabePrv prv, BswabeCph cph,
 			Element m) {
 		Element t;
@@ -147,9 +187,9 @@ public class Bswabe {
 		decFlatten(t, cph.p, prv, pub);
 
 		m = cph.cs.mul(t); /* num_muls++; */
-		
-		t= pub.p.pairing(cph.c, prv.d);
-		t=t.invert();
+
+		t = pub.p.pairing(cph.c, prv.d);
+		t = t.invert();
 		m = m.mul(t);
 
 		return true;
@@ -167,7 +207,7 @@ public class Bswabe {
 
 	private static void decNodeFlatten(Element r, Element exp, BswabePolicy p,
 			BswabePrv prv, BswabePub pub) {
-		if (p.children.length == 0)
+		if (p.children == null || p.children.length == 0)
 			decLeafFlatten(r, exp, p, prv, pub);
 		else
 			decInternalFlatten(r, exp, p, prv, pub);
@@ -232,10 +272,10 @@ public class Bswabe {
 		BswabePolicy curCompPol;
 		ArrayList<Integer> c = new ArrayList<Integer>();
 
-		len = p.children.length;
-		if (len == 0)
+		if (p.children == null || p.children.length == 0)
 			p.min_leaves = 1;
 		else {
+			len = p.children.length;
 			for (i = 0; i < len; i++)
 				if (p.children[i].satisfiable)
 					pickSatisfyMinLeaves(p.children[i], prv);
@@ -267,11 +307,13 @@ public class Bswabe {
 		String prvAttr;
 
 		p.satisfiable = false;
-		if (p.children.length == 0) {
+		if (p.children == null || p.children.length == 0) {
 			for (i = 0; i < prv.comps.size(); i++) {
 				prvAttr = prv.comps.get(i).attr;
-				// TODO check if it is right
+				// System.out.println("prvAtt:" + prvAttr);
+				// System.out.println("p.attr" + p.attr);
 				if (prvAttr.compareTo(p.attr) == 0) {
+					// System.out.println("=staisfy=");
 					p.satisfiable = true;
 					p.attri = 1;
 					break;
@@ -302,7 +344,7 @@ public class Bswabe {
 
 		p.q = randPoly(p.k - 1, e);
 
-		if (p.children.length == 0) {
+		if (p.children == null || p.children.length == 0) {
 			p.c = pairing.getG1().newElement();
 			p.cp = pairing.getG2().newElement();
 
@@ -316,6 +358,7 @@ public class Bswabe {
 				fillPolicy(p.children[i], pub, t);
 			}
 		}
+
 	}
 
 	private static void evalPoly(Element r, BswabePolynomial q, Element x) {
@@ -430,7 +473,6 @@ public class Bswabe {
 			p.attr = s;
 		else
 			p.attr = null;
-
 		p.q = null;
 
 		return p;
