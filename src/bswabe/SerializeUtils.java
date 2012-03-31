@@ -6,18 +6,22 @@ import java.util.ArrayList;
 
 public class SerializeUtils {
 
+	/* Method has been test okay */
 	public static void serializeElement(ArrayList<Byte> arrlist, Element e) {
 		byte[] arr_e = e.toBytes();
 		serializeUint32(arrlist, (long) arr_e.length);
+		System.out.println("len="+arr_e.length);
 		byteArrListAppend(arrlist, arr_e);
 	}
 
+	/* Method has been test okay */
 	public static int unserializeElement(byte[] arr, int offset, Element e) {
 		long len;
 		int i;
 		byte[] e_byte;
 
 		len = unserializeUint32(arr, offset);
+		System.out.println("len="+len);
 		e_byte = new byte[(int) len];
 		offset += 4;
 		for (i = 0; i < len; i++)
@@ -73,6 +77,15 @@ public class SerializeUtils {
 		return p;
 	}
 
+	/*
+	 * Usage:
+	 * 
+	 * StringBuffer sb = new StringBuffer("");
+	 * 
+	 * offset = unserializeString(arr, offset, sb);
+	 * 
+	 * String str = sb.substring(0);
+	 */
 	public static int unserializeString(byte[] arr, int offset, StringBuffer sb) {
 		int i;
 		int len;
@@ -94,6 +107,7 @@ public class SerializeUtils {
 		byteArrListAppend(arrlist, b);
 	}
 
+	/* Method has been test okay */
 	private static void serializeUint32(ArrayList<Byte> arrlist, long k) {
 		int i;
 		byte b;
@@ -104,7 +118,12 @@ public class SerializeUtils {
 		}
 	}
 
-	/* You have to do offset+=4 yourself */
+	/*
+	 * Usage:
+	 * 
+	 * You have to do offset+=4 after call this method
+	 */
+	/* Method has been test okay */
 	private static long unserializeUint32(byte[] arr, int offset) {
 		int i;
 		long r;
@@ -130,17 +149,22 @@ public class SerializeUtils {
 
 	}
 
+	/* Method has been test okay */
 	public static byte[] serializeBswabeMsk(BswabeMsk msk) {
 		ArrayList<Byte> arrlist = new ArrayList<Byte>();
+
 		serializeElement(arrlist, msk.beta);
 		serializeElement(arrlist, msk.beta);
+
 		int len = arrlist.size();
 		byte[] res = new byte[len];
 		for (int i = 0; i < len; i++)
 			res[i] = arrlist.get(i).byteValue();
+
 		return res;
 	}
 
+	/* Method has been test okay */
 	public static BswabeMsk unserializeBswabeMsk(BswabePub pub, byte[] b) {
 		int offset = 0;
 		BswabeMsk msk = new BswabeMsk();
@@ -150,8 +174,64 @@ public class SerializeUtils {
 
 		offset = unserializeElement(b, offset, msk.beta);
 		offset = unserializeElement(b, offset, msk.g_alpha);
-		
+
 		return msk;
+	}
+
+	public static byte[] serializeBswabePrv(BswabePrv prv) {
+		ArrayList<Byte> arrlist;
+		int prvCompsLen, arrLen, i;
+		byte[] res;
+
+		arrlist = new ArrayList<Byte>();
+		prvCompsLen = prv.comps.size();
+		serializeElement(arrlist, prv.d);
+		serializeUint32(arrlist, prvCompsLen);
+
+		for (i = 0; i < prvCompsLen; i++) {
+			serializeString(arrlist, prv.comps.get(i).attr);
+			serializeElement(arrlist, prv.comps.get(i).d);
+			serializeElement(arrlist, prv.comps.get(i).dp);
+		}
+
+		arrLen = arrlist.size();
+		res = new byte[arrLen];
+		for (i = 0; i < arrLen; i++)
+			res[i] = arrlist.get(i).byteValue();
+		return res;
+	}
+
+	public static BswabePrv unserializeBswabePrv(BswabePub pub, byte[] b) {
+		BswabePrv prv;
+		int i, offset, len;
+
+		prv = new BswabePrv();
+		offset = 0;
+
+		prv.d = pub.p.getG2().newElement();
+		offset = unserializeElement(b, offset, prv.d);
+
+		prv.comps = new ArrayList<BswabePrvComp>();
+		len = (int) unserializeUint32(b, offset);
+		offset += 4;
+
+		for (i = 0; i < len; i++) {
+			BswabePrvComp c = new BswabePrvComp();
+
+			StringBuffer sb = new StringBuffer("");
+			offset = unserializeString(b, offset, sb);
+			c.attr = sb.substring(0);
+
+			c.d = pub.p.getG2().newElement();
+			c.dp = pub.p.getG2().newElement();
+
+			offset = unserializeElement(b, offset, c.d);
+			offset = unserializeElement(b, offset, c.dp);
+
+			prv.comps.add(c);
+		}
+
+		return prv;
 	}
 
 }

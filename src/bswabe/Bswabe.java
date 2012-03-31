@@ -32,7 +32,7 @@ public class Bswabe {
 		System.out.println(params);
 		Pairing pairing = pub.p;
 	
-		
+
 		//test
 		//pairing.
 	//	params= generator.

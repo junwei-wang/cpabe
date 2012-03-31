@@ -24,13 +24,13 @@ public class Cpabe {
 
 	public void setup(String pubfile, String mskfile) throws IOException,
 			ClassNotFoundException {
-		byte[] pub_byte, msk_byte;
+		byte[] msk_byte;
 		BswabePub pub = new BswabePub();
 		BswabeMsk msk = new BswabeMsk();
 		Bswabe.setup(pub, msk);
-		
+
 		msk_byte = SerializeUtils.serializeBswabeMsk(msk);
-		Common.spitFile(mskfile, msk_byte);	
+		Common.spitFile(mskfile, msk_byte);
 	}
 
 	public void setup() throws IOException, ClassNotFoundException {
@@ -47,8 +47,13 @@ public class Cpabe {
 		setup("pub_key", mskfile);
 	}
 
-	public BswabePrv keygen(BswabePub pub, BswabeMsk msk, String attr_str)
-			throws NoSuchAlgorithmException {
+	public BswabePrv keygen(BswabePub pub, String mskfile, String attr_str)
+			throws NoSuchAlgorithmException, IOException {
+		BswabeMsk msk;
+		byte[] msk_byte;
+
+		msk_byte = Common.suckFile(mskfile);
+		msk = SerializeUtils.unserializeBswabeMsk(pub, msk_byte);
 		String[] attr_arr = LangPolicy.parseAttribute(attr_str);
 		BswabePrv prv = Bswabe.keygen(pub, msk, attr_arr);
 		return prv;
