@@ -4,11 +4,10 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
+import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 
 import javax.crypto.BadPaddingException;
@@ -59,7 +58,7 @@ public class Common {
 			InvalidKeyException, InvalidAlgorithmParameterException,
 			IllegalBlockSizeException, BadPaddingException {
 		int i;
-		SecretKeySpec key;
+		Key key;
 		byte[] ct;
 		byte[] iv = new byte[16];
 		byte[] len = new byte[4]; /* uint8 */
@@ -72,7 +71,7 @@ public class Common {
 
 		/* stuff in real length (big endian) before padding */
 		len[0] = (byte) ((pt.length & 0xff000000) >> 24);
-		len[1] = (byte) ((pt.length & 0x00ff0000) >> 16);
+		len[1] = (byte) ((pt.length & 0xff0000) >> 16);
 		len[2] = (byte) ((pt.length & 0xff00) >> 8);
 		len[3] = (byte) (pt.length & 0xff);
 
@@ -95,11 +94,11 @@ public class Common {
 		return ct;
 	}
 
-	private static SecretKeySpec initAES(Element k)
+	private static Key initAES(Element k)
 			throws NoSuchAlgorithmException {
 		byte[] rawkey = k.toBytes();
 		// TODO check
-		SecretKeySpec skeySpec = new SecretKeySpec(rawkey, "AES");
+		Key skeySpec = new SecretKeySpec(rawkey, "AES");
 		return skeySpec;
 	}
 
@@ -109,22 +108,22 @@ public class Common {
 		OutputStream os = new FileOutputStream(encfile);
 		/* write real file len as 32-bit big endian int */
 		for (i = 3; i >= 0; i--)
-			os.write((fileLen & (0xff << 8 * i) >> 8 * i));
+			os.write(((fileLen & (0xff << 8 * i)) >> 8 * i));
 
 		/* write aes_buf */
 		for (i = 3; i >= 0; i--)
-			os.write((aesBuf.length & (0xff << 8 * i) >> 8 * i));
+			os.write(((aesBuf.length & (0xff << 8 * i)) >> 8 * i));
 		os.write(aesBuf);
 
 		/* write cph_buf */
 		for (i = 3; i >= 0; i--)
-			os.write((cphBuf.length & (0xff << 8 * i) >> 8 * i));
+			os.write(((cphBuf.length & (0xff << 8 * i)) >> 8 * i));
 		os.write(cphBuf);
 
 		os.close();
 
 	}
-
+	
 	public static void readCpabeFile(String encfile, byte[] cphBuf,
 			int fileLen, byte[] aesBuf) throws IOException {
 		int i, len;
@@ -156,7 +155,7 @@ public class Common {
 			InvalidKeyException, InvalidAlgorithmParameterException,
 			IllegalBlockSizeException, BadPaddingException {
 		int i;
-		SecretKeySpec key;
+		Key key;
 		byte[] iv = new byte[16];
 		byte[] tmp_pt;
 		byte[] pt;

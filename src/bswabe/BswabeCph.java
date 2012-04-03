@@ -21,15 +21,7 @@ public class BswabeCph {
 		SerializeUtils.serializeElement(arrlist, c);
 		SerializeUtils.serializePolicy(arrlist, p);
 
-		Byte[] B = (Byte[]) arrlist.toArray();
-		int len = B.length;
-		byte[] b = new byte[len];
-
-		/* the way Byte to byte */
-		for (int i = 0; i < len; i++)
-			b[i] = B[i].byteValue();
-
-		return b;
+		return Byte_arr2byte_arr(arrlist);
 	}
 
 	public static BswabeCph bswabeCphUnserialize(BswabePub pub, byte[] cphBuf) {
@@ -48,5 +40,15 @@ public class BswabeCph {
 		offset = offset_arr[0];
 
 		return cph;
+	}
+
+	private static byte[] Byte_arr2byte_arr(ArrayList<Byte> B) {
+		int len = B.size();
+		byte[] b = new byte[len];
+
+		for (int i = 0; i < len; i++)
+			b[i] = B.get(i).byteValue();
+
+		return b;
 	}
 }

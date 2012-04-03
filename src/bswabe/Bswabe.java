@@ -21,23 +21,15 @@ public class Bswabe {
 	public static void setup(BswabePub pub, BswabeMsk msk) {
 		Element alpha;
 
-		// TODO initialize the parmas of pairing
-		// 找到Curve的定义就知道改怎么办了
-		// libbswabe-0.9/core.c：TYPE_A_PARAMS
 		int rBits = 160;
 		int qBits = 512;
 		CurveGenerator generator = new TypeACurveGenerator(rBits, qBits);
 		CurveParameters params = generator.generate();
-		pub.p = PairingFactory.getPairing(params);
-		System.out.println(params);
-		Pairing pairing = pub.p;
-	
 
-		//test
-		//pairing.
-	//	params= generator.
-		//test
-		
+		pub.pairingDesc = params.toString();
+		pub.p = PairingFactory.getPairing(params);
+		// System.out.println(params);
+		Pairing pairing = pub.p;
 
 		pub.g = pairing.getG1().newElement();
 		pub.h = pairing.getG1().newElement();
@@ -134,10 +126,11 @@ public class Bswabe {
 	 * Returns null if an error occured, in which case a description can be
 	 * retrieved by calling bswabe_error().
 	 */
-	public static BswabeCph enc(BswabePub pub, Element m, String policy)
+	public static BswabeKeyCph enc(BswabePub pub, String policy)
 			throws Exception {
+		BswabeKeyCph keyCph = new BswabeKeyCph();
 		BswabeCph cph = new BswabeCph();
-		Element s;
+		Element s, m;
 
 		/* initialize */
 
@@ -157,8 +150,11 @@ public class Bswabe {
 		cph.c = pub.h.powZn(s);
 
 		fillPolicy(cph.p, pub, s);
+		
+		keyCph.cph = cph;
+		keyCph.key = m;
 
-		return cph;
+		return keyCph;
 	}
 
 	/*
@@ -478,7 +474,7 @@ public class Bswabe {
 		return p;
 	}
 
-	public static void elementFromString(Element h, String s)
+	private static void elementFromString(Element h, String s)
 			throws NoSuchAlgorithmException {
 		MessageDigest md = MessageDigest.getInstance("SHA-1");
 		byte[] digest = md.digest(s.getBytes());

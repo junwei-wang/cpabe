@@ -10,6 +10,7 @@ import javax.crypto.NoSuchPaddingException;
 
 import bswabe.Bswabe;
 import bswabe.BswabeCph;
+import bswabe.BswabeKeyCph;
 import bswabe.BswabeMsk;
 import bswabe.BswabePrv;
 import bswabe.BswabePub;
@@ -29,6 +30,7 @@ public class Cpabe {
 		BswabeMsk msk = new BswabeMsk();
 		Bswabe.setup(pub, msk);
 
+		/* store BswabeMsk into mskfile */
 		msk_byte = SerializeUtils.serializeBswabeMsk(msk);
 		Common.spitFile(mskfile, msk_byte);
 	}
@@ -37,39 +39,53 @@ public class Cpabe {
 		setup("pub_key", "master_key");
 	}
 
-	public void setupSpecfyPub(String pubfile) throws IOException,
-			ClassNotFoundException {
-		setup(pubfile, "master_key");
-	}
-
-	public void setupSpecfyMsk(String mskfile) throws IOException,
-			ClassNotFoundException {
-		setup("pub_key", mskfile);
-	}
-
-	public BswabePrv keygen(BswabePub pub, String mskfile, String attr_str)
-			throws NoSuchAlgorithmException, IOException {
+	public void keygen(String pubfile, String prvfile, String mskfile,
+			String attr_str) throws NoSuchAlgorithmException, IOException {
+		BswabePub pub;
 		BswabeMsk msk;
-		byte[] msk_byte;
+		byte[] pub_byte, msk_byte, prv_byte;
 
+		/* get BswabePub from pubfile */
+		pub_byte = Common.suckFile(pubfile);
+		pub = SerializeUtils.unserializeBswabePub(pub_byte);
+
+		/* get BswabeMsk from mskfile */
 		msk_byte = Common.suckFile(mskfile);
 		msk = SerializeUtils.unserializeBswabeMsk(pub, msk_byte);
+
 		String[] attr_arr = LangPolicy.parseAttribute(attr_str);
 		BswabePrv prv = Bswabe.keygen(pub, msk, attr_arr);
-		return prv;
+
+		/* store BswabePrv into prvfile */
+		prv_byte = SerializeUtils.serializeBswabePrv(prv);
+		Common.spitFile(prvfile, prv_byte);
 	}
 
-	public void enc(BswabePub pub, String policy, String inputfile,
+	public void keygen(String prvfile, String attr_str)
+			throws NoSuchAlgorithmException, IOException {
+		keygen("pub_key", prvfile, "msk_key", attr_str);
+	}
+
+	public void enc(String pubfile, String policy, String inputfile,
 			String encfile) throws Exception {
+		BswabePub pub;
 		BswabeCph cph;
+		BswabeKeyCph keyCph;
 		int fileLen;
 		byte[] plt;
 		byte[] cphBuf;
 		byte[] aesBuf;
+		byte[] pub_byte;
+		Element m ;
 
-		Element m = null;
+		/* get BswabePub from pubfile */
+		pub_byte = Common.suckFile(pubfile);
+		pub = SerializeUtils.unserializeBswabePub(pub_byte);
 
-		cph = Bswabe.enc(pub, m, policy);
+		keyCph = Bswabe.enc(pub, policy);
+		cph = keyCph.cph;
+		m = keyCph.key;
+
 		if (cph == null) {
 			System.out.println("Error happed in enc");
 			System.exit(0);
@@ -77,6 +93,7 @@ public class Cpabe {
 
 		cphBuf = cph.bswabeCphSerialize();
 
+		/* read file to encrypted */
 		plt = Common.suckFile(inputfile);
 		fileLen = plt.length;
 		aesBuf = Common.AES128CbcEncrypt(plt, m);
@@ -85,19 +102,32 @@ public class Cpabe {
 
 	}
 
-	public void dec(BswabePub pub, BswabePrv prv, String encfile, String decfile)
-			throws IOException, InvalidKeyException, NoSuchAlgorithmException,
-			NoSuchPaddingException, InvalidAlgorithmParameterException,
-			IllegalBlockSizeException, BadPaddingException {
+	public void dec(String pubfile, String prvfile, String encfile,
+			String decfile) throws IOException, InvalidKeyException,
+			NoSuchAlgorithmException, NoSuchPaddingException,
+			InvalidAlgorithmParameterException, IllegalBlockSizeException,
+			BadPaddingException {
 		int fileLen = 0;
 		byte[] aesBuf = null;
 		byte[] plt;
 		byte[] cphBuf = null;
+		byte[] prv_byte;
+		byte[] pub_byte;
 		BswabeCph cph = null;
 		Element m = null;
+		BswabePrv prv;
+		BswabePub pub;
+
+		/* get BswabePub from pubfile */
+		pub_byte = Common.suckFile(pubfile);
+		pub = SerializeUtils.unserializeBswabePub(pub_byte);
 
 		Common.readCpabeFile(encfile, cphBuf, fileLen, aesBuf);
 		cph = BswabeCph.bswabeCphUnserialize(pub, cphBuf);
+
+		/* get BswabePrv form prvfile */
+		prv_byte = Common.suckFile(prvfile);
+		prv = SerializeUtils.unserializeBswabePrv(pub, prv_byte);
 
 		Bswabe.dec(pub, prv, cph, m);
 

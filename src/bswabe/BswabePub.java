@@ -7,7 +7,7 @@ public class BswabePub{
 	/*
 	 * A public key
 	 */
-	int[] pairing_desc;
+	String pairingDesc;
 	Pairing p;				
 	Element g;				/* G_1 */
 	Element h;				/* G_1 */
