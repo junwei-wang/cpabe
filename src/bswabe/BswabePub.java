@@ -7,10 +7,10 @@ public class BswabePub{
 	/*
 	 * A public key
 	 */
-	String pairingDesc;
-	Pairing p;				
-	Element g;				/* G_1 */
-	Element h;				/* G_1 */
-	Element gp;			/* G_2 */
-	Element g_hat_alpha;	/* G_T */
+	public String pairingDesc;
+	public Pairing p;				
+	public Element g;				/* G_1 */
+	public Element h;				/* G_1 */
+	public Element gp;			/* G_2 */
+	public Element g_hat_alpha;	/* G_T */
 }

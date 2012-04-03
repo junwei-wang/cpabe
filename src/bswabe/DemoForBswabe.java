@@ -1,7 +1,5 @@
 package bswabe;
 
-import it.unisa.dia.gas.jpbc.Element;
-
 public class DemoForBswabe {
 	final static boolean DEBUG = true;
 	final static String inputfile = "file_dir/input.txt";
@@ -10,7 +8,7 @@ public class DemoForBswabe {
 
 	/* come test data, choose attr and policy */
 	/* TODO attr is alphabetic order */
-	static String[] attr = { "baf", "fim1", "foo" };
+	static String[] attr = { "baf", "fim1", "fim", "foo" };
 	static String policy = "foo bar fim 2of3 baf 1of2";
 
 	static String[] attr_kevin = {
@@ -368,11 +366,10 @@ public class DemoForBswabe {
 		BswabeMsk msk = new BswabeMsk();
 		BswabePrv prv;
 		BswabeCph cph;
-		Element m = null;
 
-		// attr = attr_kevin;
-		// attr = attr_sara;
-		// policy = policy_kevin_or_sara;
+		//attr = attr_kevin;
+		 attr = attr_sara;
+		 policy = policy_kevin_or_sara;
 
 		println("//demo for bswabe: start to setup");
 		Bswabe.setup(pub, msk);
@@ -387,7 +384,7 @@ public class DemoForBswabe {
 		println("//demo for bswabe: end to enc");
 
 		println("//demo for bswabe: start to dec");
-		boolean res = Bswabe.dec(pub, prv, cph, m);
+		boolean res = Bswabe.dec(pub, prv, cph).b;
 		println("//demo for bswabe: end to dec");
 		if (res)
 			System.out.println("succeed in decrpt");

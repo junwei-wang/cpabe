@@ -74,6 +74,7 @@ public class SerializeUtils {
 			offset[0] = unserializeElement(arr, offset[0], p.c);
 			offset[0] = unserializeElement(arr, offset[0], p.cp);
 		} else {
+			p.children = new BswabePolicy[n];
 			for (i = 0; i < n; i++)
 				p.children[i] = unserializePolicy(pub, arr, offset);
 		}
@@ -191,7 +192,7 @@ public class SerializeUtils {
 		return pub;
 	}
 
-	private static byte[] Byte_arr2byte_arr(ArrayList<Byte> B) {
+	public static byte[] Byte_arr2byte_arr(ArrayList<Byte> B) {
 		int len = B.size();
 		byte[] b = new byte[len];
 
@@ -276,6 +277,33 @@ public class SerializeUtils {
 		}
 
 		return prv;
+	}
+	
+	public static byte[] bswabeCphSerialize(BswabeCph cph) {
+		ArrayList<Byte> arrlist = new ArrayList<Byte>();
+		SerializeUtils.serializeElement(arrlist, cph.cs);
+		SerializeUtils.serializeElement(arrlist, cph.c);
+		SerializeUtils.serializePolicy(arrlist, cph.p);
+
+		return Byte_arr2byte_arr(arrlist);
+	}
+
+	public static BswabeCph bswabeCphUnserialize(BswabePub pub, byte[] cphBuf) {
+		BswabeCph cph = new BswabeCph();
+		int offset = 0;
+		int[] offset_arr = new int[1];
+
+		cph.cs = pub.p.getGT().newElement();
+		cph.c = pub.p.getG1().newElement();
+
+		offset = SerializeUtils.unserializeElement(cphBuf, offset, cph.cs);
+		offset = SerializeUtils.unserializeElement(cphBuf, offset, cph.c);
+
+		offset_arr[0] = offset;
+		cph.p = SerializeUtils.unserializePolicy(pub, cphBuf, offset_arr);
+		offset = offset_arr[0];
+
+		return cph;
 	}
 
 }

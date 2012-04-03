@@ -1,34 +1,41 @@
 package bswabe;
 
+import it.unisa.dia.gas.jpbc.CurveParameters;
+import it.unisa.dia.gas.jpbc.Element;
+import it.unisa.dia.gas.jpbc.Pairing;
+import it.unisa.dia.gas.plaf.jpbc.pairing.DefaultCurveParameters;
+import it.unisa.dia.gas.plaf.jpbc.pairing.PairingFactory;
+
+import java.io.ByteArrayInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-import it.unisa.dia.gas.jpbc.CurveGenerator;
-import it.unisa.dia.gas.jpbc.CurveParameters;
-import it.unisa.dia.gas.jpbc.Element;
-import it.unisa.dia.gas.jpbc.Pairing;
-import it.unisa.dia.gas.plaf.jpbc.pairing.PairingFactory;
-import it.unisa.dia.gas.plaf.jpbc.pairing.a.TypeACurveGenerator;
-
 public class Bswabe {
 
 	/*
 	 * Generate a public key and corresponding master secret key.
 	 */
+
+	private static String curveParams = "type a\n"
+			+ "q 87807107996633125224377819847540498158068831994142082"
+			+ "1102865339926647563088022295707862517942266222142315585"
+			+ "8769582317459277713367317481324925129998224791\n"
+			+ "h 12016012264891146079388821366740534204802954401251311"
+			+ "822919615131047207289359704531102844802183906537786776\n"
+			+ "r 730750818665451621361119245571504901405976559617\n"
+			+ "exp2 159\n" + "exp1 107\n" + "sign1 1\n" + "sign0 1\n";
+
 	public static void setup(BswabePub pub, BswabeMsk msk) {
 		Element alpha;
 
-		int rBits = 160;
-		int qBits = 512;
-		CurveGenerator generator = new TypeACurveGenerator(rBits, qBits);
-		CurveParameters params = generator.generate();
+		CurveParameters params = new DefaultCurveParameters()
+				.load(new ByteArrayInputStream(curveParams.getBytes()));
 
-		pub.pairingDesc = params.toString();
+		pub.pairingDesc = curveParams;
 		pub.p = PairingFactory.getPairing(params);
-		// System.out.println(params);
 		Pairing pairing = pub.p;
 
 		pub.g = pairing.getG1().newElement();
@@ -42,13 +49,31 @@ public class Bswabe {
 		alpha.setToRandom();
 		msk.beta.setToRandom();
 		pub.g.setToRandom();
+		// PrintArr("pub.g: ", pub.g.toBytes());
+		// PrintArr("pub.h: ", pub.h.toBytes());
 		pub.gp.setToRandom();
 
 		msk.g_alpha = pub.gp.powZn(alpha);
+		// PrintArr("pub.g: ", pub.g.toBytes());
+		// PrintArr("pub.h: ", pub.h.toBytes());
+		// PrintArr("msk.beta: ", msk.beta.toBytes());
+		// PrintArr("alpha: ", alpha.toBytes());
 		pub.h = pub.g.powZn(msk.beta);
 
 		pub.g_hat_alpha = pairing.pairing(pub.g, msk.g_alpha);
+
+		// PrintArr("pub.g: ", pub.g.toBytes());
+		// PrintArr("pub.h: ", pub.h.toBytes());
+		// PrintArr("pub.gh: ", pub.gp.toBytes());
+		// PrintArr("pub.g_hat: ", pub.g_hat_alpha.toBytes());
 	}
+
+	// private static void PrintArr(String s, byte[] b) {
+	// System.out.print(s);
+	// for (byte i : b)
+	// System.out.print(i + " ");
+	// System.out.println();
+	// }
 
 	/*
 	 * Generate a private key with the given set of attributes.
@@ -126,9 +151,9 @@ public class Bswabe {
 	 * Returns null if an error occured, in which case a description can be
 	 * retrieved by calling bswabe_error().
 	 */
-	public static BswabeKeyCph enc(BswabePub pub, String policy)
+	public static BswabeCphKey enc(BswabePub pub, String policy)
 			throws Exception {
-		BswabeKeyCph keyCph = new BswabeKeyCph();
+		BswabeCphKey keyCph = new BswabeCphKey();
 		BswabeCph cph = new BswabeCph();
 		Element s, m;
 
@@ -142,15 +167,15 @@ public class Bswabe {
 		cph.p = parsePolicyPostfix(policy);
 
 		/* compute */
-		m = m.setToRandom();
-		s = s.setToRandom();
+		m.setToRandom();
+		s.setToRandom();
 		cph.cs = pub.g_hat_alpha.powZn(s);
 		cph.cs = cph.cs.mul(m);
 
 		cph.c = pub.h.powZn(s);
 
 		fillPolicy(cph.p, pub, s);
-		
+
 		keyCph.cph = cph;
 		keyCph.key = m;
 
@@ -164,9 +189,11 @@ public class Bswabe {
 	 * Returns true if decryption succeeded, false if this key does not satisfy
 	 * the policy of the ciphertext (in which case m is unaltered).
 	 */
-	public static boolean dec(BswabePub pub, BswabePrv prv, BswabeCph cph,
-			Element m) {
+	public static BswabeElementBoolean dec(BswabePub pub, BswabePrv prv,
+			BswabeCph cph) {
 		Element t;
+		Element m;
+		BswabeElementBoolean beb = new BswabeElementBoolean();
 
 		m = pub.p.getGT().newElement();
 		t = pub.p.getGT().newElement();
@@ -175,7 +202,9 @@ public class Bswabe {
 		if (!cph.p.satisfiable) {
 			System.out
 					.println("cannot decrypt, attributes in key do not satisfy policy");
-			return false;
+			beb.e = null;
+			beb.b = false;
+			return beb;
 		}
 
 		pickSatisfyMinLeaves(cph.p, prv);
@@ -188,7 +217,10 @@ public class Bswabe {
 		t = t.invert();
 		m = m.mul(t);
 
-		return true;
+		beb.e = m;
+		beb.b = true;
+
+		return beb;
 	}
 
 	private static void decFlatten(Element r, BswabePolicy p, BswabePrv prv,
