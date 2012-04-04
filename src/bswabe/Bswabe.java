@@ -513,7 +513,7 @@ public class Bswabe {
 		h.setFromHash(digest, 0, digest.length);
 	}
 
-	static class IntegerComparator implements Comparator<Integer> {
+	private static class IntegerComparator implements Comparator<Integer> {
 		BswabePolicy policy;
 
 		public IntegerComparator(BswabePolicy p) {
