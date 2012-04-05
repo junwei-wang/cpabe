@@ -1,3 +1,5 @@
+import cpabe.Cpabe;
+
 public class DemoForCpabe {
 	final static boolean DEBUG = true;
 
