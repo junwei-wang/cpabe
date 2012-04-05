@@ -24,14 +24,6 @@ public class Cpabe {
 		BswabePub pub = new BswabePub();
 		BswabeMsk msk = new BswabeMsk();
 		Bswabe.setup(pub, msk);
-		// System.out.print(pub.pairingDesc);
-		// PrintArr("pub.g: ", pub.g.toBytes());
-		// PrintArr("pub.h: ", pub.h.toBytes());
-		// PrintArr("pub.gh:      ", pub.gp.toBytes());
-		// PrintArr("pub.g_hat: ", pub.g_hat_alpha.toBytes());
-		//
-		// PrintArr("msk.beta: ", msk.beta.toBytes());
-		// PrintArr("msk.g_alpha: ", msk.g_alpha.toBytes());
 
 		/* store BswabePub into mskfile */
 		pub_byte = SerializeUtils.serializeBswabePub(pub);
@@ -97,13 +89,6 @@ public class Cpabe {
 		Common.writeCpabeFile(encfile, m.toBytes(), cphBuf, aesBuf);
 	}
 
-	// private void PrintArr(String s, byte[] b) {
-	// System.out.print(s);
-	// for (byte i : b)
-	// System.out.print(i + " ");
-	// System.out.println();
-	// }
-
 	public void dec(String pubfile, String prvfile, String encfile,
 			String decfile) throws Exception {
 		byte[] aesBuf, cphBuf, mBuf;
@@ -132,8 +117,6 @@ public class Cpabe {
 
 		BswabeElementBoolean beb = Bswabe.dec(pub, prv, cph);
 		if (beb.b) {
-			// PrintArr("element: ", beb.e.toBytes());
-			// PrintArr("element: ", mBuf);
 			// the right way
 			// plt = AESCoder.decrypt(beb.e.toBytes(), aesBuf);
 			// the wrong way
