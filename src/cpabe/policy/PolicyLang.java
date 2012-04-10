@@ -1,5 +1,3 @@
-package cpabe.policy;
-
 /* A Bison parser, made by GNU Bison 2.5.  */
 
 /* Skeleton implementation for Bison LALR(1) parsers in Java
@@ -32,19 +30,23 @@ package cpabe.policy;
  This special exception was added by the Free Software Foundation in
  version 2.2 of Bison.  */
 
+package cpabe.policy;
+
 /* First part of user declarations.  */
 
 /* "%code imports" blocks.  */
 
 /* Line 33 of lalr1.java  */
-/* Line 16 of "PolicyLang.y"  */
+/* Line 18 of "PolicyLang.y"  */
 
 import java.io.IOException;
 import java.util.ArrayList;
-import bswabe.BswabePolicy;
+import java.util.StringTokenizer;
+
+//import bswabe.BswabePolicy;
 
 /* Line 33 of lalr1.java  */
-/* Line 48 of "PolicyLang.java"  */
+/* Line 50 of "PolicyLang.java"  */
 
 /**
  * A Bison parser, automatically generated from <tt>PolicyLang.y</tt>.
@@ -279,236 +281,286 @@ public class PolicyLang {
 		return yyerrstatus_ == 0;
 	}
 
-	private int yyaction (int yyn, YYStack yystack, int yylen) 
-  {
-    Object yyval;
-    
+	private int yyaction(int yyn, YYStack yystack, int yylen) {
+		Object yyval;
 
-    /* If YYLEN is nonzero, implement the default value of the action:
-       `$$ = $1'.  Otherwise, use the top of the stack.
+		/*
+		 * If YYLEN is nonzero, implement the default value of the action: `$$ =
+		 * $1'. Otherwise, use the top of the stack.
+		 * 
+		 * Otherwise, the following line sets YYVAL to garbage. This behavior is
+		 * undocumented and Bison users should not rely upon it.
+		 */
+		if (yylen > 0)
+			yyval = yystack.valueAt(yylen - 1);
+		else
+			yyval = yystack.valueAt(0);
 
-       Otherwise, the following line sets YYVAL to garbage.
-       This behavior is undocumented and Bison
-       users should not rely upon it.  */
-    if (yylen > 0)
-      yyval = yystack.valueAt (yylen - 1);
-    else
-      yyval = yystack.valueAt (0);
+		yy_reduce_print(yyn, yystack);
 
-    yy_reduce_print (yyn, yystack);
+		switch (yyn) {
+		case 2:
+			if (yyn == 2)
 
-    switch (yyn)
-      {
-	  case 2:
-  if (yyn == 2)
-    
-/* Line 351 of lalr1.java  */
-/* Line 39 of "PolicyLang.y"  */
-    { finalPolicy = ((CpabePolicy)(yystack.valueAt (1-(1)))) };
-  break;
-    
+			/* Line 351 of lalr1.java */
+			/* Line 229 of "PolicyLang.y" */
+			{
+				finalPolicy = ((CpabePolicy) (yystack.valueAt(1 - (1))));
+			}
+			;
+			break;
 
-  case 3:
-  if (yyn == 3)
-    
-/* Line 351 of lalr1.java  */
-/* Line 41 of "PolicyLang.y"  */
-    { yyval = expInt(((Integer)(yystack.valueAt (3-(1)))), ((Integer)(yystack.valueAt (3-(3))))); };
-  break;
-    
+		case 3:
+			if (yyn == 3)
 
-  case 4:
-  if (yyn == 4)
-    
-/* Line 351 of lalr1.java  */
-/* Line 42 of "PolicyLang.y"  */
-    { yyval = flexInt(((Integer)(yystack.valueAt (1-(1)))));    };
-  break;
-    
+			/* Line 351 of lalr1.java */
+			/* Line 231 of "PolicyLang.y" */
+			{
+				yyval = expInt(((Integer) (yystack.valueAt(3 - (1)))),
+						((Integer) (yystack.valueAt(3 - (3)))));
+			}
+			;
+			break;
 
-  case 5:
-  if (yyn == 5)
-    
-/* Line 351 of lalr1.java  */
-/* Line 44 of "PolicyLang.y"  */
-    { yyval = leafPolicy(((String)(yystack.valueAt (1-(1)))));        };
-  break;
-    
+		case 4:
+			if (yyn == 4)
 
-  case 6:
-  if (yyn == 6)
-    
-/* Line 351 of lalr1.java  */
-/* Line 45 of "PolicyLang.y"  */
-    { yyval = kOf2Policy(1, ((CpabePolicy)(yystack.valueAt (3-(1)))), ((CpabePolicy)(yystack.valueAt (3-(3))))); };
-  break;
-    
+			/* Line 351 of lalr1.java */
+			/* Line 232 of "PolicyLang.y" */
+			{
+				yyval = flexInt(((Integer) (yystack.valueAt(1 - (1)))));
+			}
+			;
+			break;
 
-  case 7:
-  if (yyn == 7)
-    
-/* Line 351 of lalr1.java  */
-/* Line 46 of "PolicyLang.y"  */
-    { yyval = kOf2Policy(2, ((CpabePolicy)(yystack.valueAt (3-(1)))), ((CpabePolicy)(yystack.valueAt (3-(3))))); };
-  break;
-    
+		case 5:
+			if (yyn == 5)
 
-  case 8:
-  if (yyn == 8)
-    
-/* Line 351 of lalr1.java  */
-/* Line 47 of "PolicyLang.y"  */
-    { yyval = kOfPolicy(((Integer)(yystack.valueAt (5-(1)))), ((ArrayList)(yystack.valueAt (5-(4)))));     };
-  break;
-    
+			/* Line 351 of lalr1.java */
+			/* Line 234 of "PolicyLang.y" */
+			{
+				yyval = leafPolicy(((String) (yystack.valueAt(1 - (1)))));
+			}
+			;
+			break;
 
-  case 9:
-  if (yyn == 9)
-    
-/* Line 351 of lalr1.java  */
-/* Line 48 of "PolicyLang.y"  */
-    { yyval = eqPolicy(((SizedInteger)(yystack.valueAt (3-(3)))), ((String)(yystack.valueAt (3-(1)))));      };
-  break;
-    
+		case 6:
+			if (yyn == 6)
 
-  case 10:
-  if (yyn == 10)
-    
-/* Line 351 of lalr1.java  */
-/* Line 49 of "PolicyLang.y"  */
-    { yyval = ltPolicy(((SizedInteger)(yystack.valueAt (3-(3)))), ((String)(yystack.valueAt (3-(1)))));      };
-  break;
-    
+			/* Line 351 of lalr1.java */
+			/* Line 235 of "PolicyLang.y" */
+			{
+				yyval = kOf2Policy(1,
+						((CpabePolicy) (yystack.valueAt(3 - (1)))),
+						((CpabePolicy) (yystack.valueAt(3 - (3)))));
+			}
+			;
+			break;
 
-  case 11:
-  if (yyn == 11)
-    
-/* Line 351 of lalr1.java  */
-/* Line 50 of "PolicyLang.y"  */
-    { yyval = gtPolicy(((SizedInteger)(yystack.valueAt (3-(3)))), ((String)(yystack.valueAt (3-(1)))));      };
-  break;
-    
+		case 7:
+			if (yyn == 7)
 
-  case 12:
-  if (yyn == 12)
-    
-/* Line 351 of lalr1.java  */
-/* Line 51 of "PolicyLang.y"  */
-    { yyval = lePolicy(((SizedInteger)(yystack.valueAt (3-(3)))), ((String)(yystack.valueAt (3-(1)))));      };
-  break;
-    
+			/* Line 351 of lalr1.java */
+			/* Line 236 of "PolicyLang.y" */
+			{
+				yyval = kOf2Policy(2,
+						((CpabePolicy) (yystack.valueAt(3 - (1)))),
+						((CpabePolicy) (yystack.valueAt(3 - (3)))));
+			}
+			;
+			break;
 
-  case 13:
-  if (yyn == 13)
-    
-/* Line 351 of lalr1.java  */
-/* Line 52 of "PolicyLang.y"  */
-    { yyval = gePolicy(((SizedInteger)(yystack.valueAt (3-(3)))), ((String)(yystack.valueAt (3-(1)))));      };
-  break;
-    
+		case 8:
+			if (yyn == 8)
 
-  case 14:
-  if (yyn == 14)
-    
-/* Line 351 of lalr1.java  */
-/* Line 53 of "PolicyLang.y"  */
-    { yyval = eqPolicy(((SizedInteger)(yystack.valueAt (3-(1)))), ((String)(yystack.valueAt (3-(3)))));      };
-  break;
-    
+			/* Line 351 of lalr1.java */
+			/* Line 237 of "PolicyLang.y" */
+			{
+				yyval = kOfPolicy(((Integer) (yystack.valueAt(5 - (1)))),
+						((ArrayList) (yystack.valueAt(5 - (4)))));
+			}
+			;
+			break;
 
-  case 15:
-  if (yyn == 15)
-    
-/* Line 351 of lalr1.java  */
-/* Line 54 of "PolicyLang.y"  */
-    { yyval = gtPolicy(((SizedInteger)(yystack.valueAt (3-(1)))), ((String)(yystack.valueAt (3-(3)))));      };
-  break;
-    
+		case 9:
+			if (yyn == 9)
 
-  case 16:
-  if (yyn == 16)
-    
-/* Line 351 of lalr1.java  */
-/* Line 55 of "PolicyLang.y"  */
-    { yyval = ltPolicy(((SizedInteger)(yystack.valueAt (3-(1)))), ((String)(yystack.valueAt (3-(3)))));      };
-  break;
-    
+			/* Line 351 of lalr1.java */
+			/* Line 238 of "PolicyLang.y" */
+			{
+				yyval = eqPolicy(((SizedInteger) (yystack.valueAt(3 - (3)))),
+						((String) (yystack.valueAt(3 - (1)))));
+			}
+			;
+			break;
 
-  case 17:
-  if (yyn == 17)
-    
-/* Line 351 of lalr1.java  */
-/* Line 56 of "PolicyLang.y"  */
-    { yyval = gePolicy(((SizedInteger)(yystack.valueAt (3-(1)))), ((String)(yystack.valueAt (3-(3)))));      };
-  break;
-    
+		case 10:
+			if (yyn == 10)
 
-  case 18:
-  if (yyn == 18)
-    
-/* Line 351 of lalr1.java  */
-/* Line 57 of "PolicyLang.y"  */
-    { yyval = lePolicy(((SizedInteger)(yystack.valueAt (3-(1)))), ((String)(yystack.valueAt (3-(3)))));      };
-  break;
-    
+			/* Line 351 of lalr1.java */
+			/* Line 239 of "PolicyLang.y" */
+			{
+				yyval = ltPolicy(((SizedInteger) (yystack.valueAt(3 - (3)))),
+						((String) (yystack.valueAt(3 - (1)))));
+			}
+			;
+			break;
 
-  case 19:
-  if (yyn == 19)
-    
-/* Line 351 of lalr1.java  */
-/* Line 58 of "PolicyLang.y"  */
-    { yyval = ((CpabePolicy)(yystack.valueAt (3-(2))));                     };
-  break;
-    
+		case 11:
+			if (yyn == 11)
 
-  case 20:
-  if (yyn == 20)
-    
-/* Line 351 of lalr1.java  */
-/* Line 60 of "PolicyLang.y"  */
-    { yyval = g_ptr_array_new();
-                                       g_ptr_array_add(yyval, ((CpabePolicy)(yystack.valueAt (1-(1))))); };
-  break;
-    
+			/* Line 351 of lalr1.java */
+			/* Line 240 of "PolicyLang.y" */
+			{
+				yyval = gtPolicy(((SizedInteger) (yystack.valueAt(3 - (3)))),
+						((String) (yystack.valueAt(3 - (1)))));
+			}
+			;
+			break;
 
-  case 21:
-  if (yyn == 21)
-    
-/* Line 351 of lalr1.java  */
-/* Line 62 of "PolicyLang.y"  */
-    { yyval = ((ArrayList)(yystack.valueAt (3-(1))));
-                                       g_ptr_array_add(yyval, ((CpabePolicy)(yystack.valueAt (3-(3))))); };
-  break;
-    
+		case 12:
+			if (yyn == 12)
 
+			/* Line 351 of lalr1.java */
+			/* Line 241 of "PolicyLang.y" */
+			{
+				yyval = lePolicy(((SizedInteger) (yystack.valueAt(3 - (3)))),
+						((String) (yystack.valueAt(3 - (1)))));
+			}
+			;
+			break;
 
+		case 13:
+			if (yyn == 13)
 
-/* Line 351 of lalr1.java  */
-/* Line 483 of "PolicyLang.java"  */
-	default: break;
-      }
+			/* Line 351 of lalr1.java */
+			/* Line 242 of "PolicyLang.y" */
+			{
+				yyval = gePolicy(((SizedInteger) (yystack.valueAt(3 - (3)))),
+						((String) (yystack.valueAt(3 - (1)))));
+			}
+			;
+			break;
 
-    yy_symbol_print ("-> $$ =", yyr1_[yyn], yyval);
+		case 14:
+			if (yyn == 14)
 
-    yystack.pop (yylen);
-    yylen = 0;
+			/* Line 351 of lalr1.java */
+			/* Line 243 of "PolicyLang.y" */
+			{
+				yyval = eqPolicy(((SizedInteger) (yystack.valueAt(3 - (1)))),
+						((String) (yystack.valueAt(3 - (3)))));
+			}
+			;
+			break;
 
-    /* Shift the result of the reduction.  */
-    yyn = yyr1_[yyn];
-    int yystate = yypgoto_[yyn - yyntokens_] + yystack.stateAt (0);
-    if (0 <= yystate && yystate <= yylast_
-	&& yycheck_[yystate] == yystack.stateAt (0))
-      yystate = yytable_[yystate];
-    else
-      yystate = yydefgoto_[yyn - yyntokens_];
+		case 15:
+			if (yyn == 15)
 
-    yystack.push (yystate, yyval);
-    return YYNEWSTATE;
-  }
+			/* Line 351 of lalr1.java */
+			/* Line 244 of "PolicyLang.y" */
+			{
+				yyval = gtPolicy(((SizedInteger) (yystack.valueAt(3 - (1)))),
+						((String) (yystack.valueAt(3 - (3)))));
+			}
+			;
+			break;
 
-	private Object expInt(Integer integer, Integer integer2) {
-		SizedInteger s = new SizedInteger();
-		return null;
+		case 16:
+			if (yyn == 16)
+
+			/* Line 351 of lalr1.java */
+			/* Line 245 of "PolicyLang.y" */
+			{
+				yyval = ltPolicy(((SizedInteger) (yystack.valueAt(3 - (1)))),
+						((String) (yystack.valueAt(3 - (3)))));
+			}
+			;
+			break;
+
+		case 17:
+			if (yyn == 17)
+
+			/* Line 351 of lalr1.java */
+			/* Line 246 of "PolicyLang.y" */
+			{
+				yyval = gePolicy(((SizedInteger) (yystack.valueAt(3 - (1)))),
+						((String) (yystack.valueAt(3 - (3)))));
+			}
+			;
+			break;
+
+		case 18:
+			if (yyn == 18)
+
+			/* Line 351 of lalr1.java */
+			/* Line 247 of "PolicyLang.y" */
+			{
+				yyval = lePolicy(((SizedInteger) (yystack.valueAt(3 - (1)))),
+						((String) (yystack.valueAt(3 - (3)))));
+			}
+			;
+			break;
+
+		case 19:
+			if (yyn == 19)
+
+			/* Line 351 of lalr1.java */
+			/* Line 248 of "PolicyLang.y" */
+			{
+				yyval = ((CpabePolicy) (yystack.valueAt(3 - (2))));
+			}
+			;
+			break;
+
+		case 20:
+			if (yyn == 20)
+
+			/* Line 351 of lalr1.java */
+			/* Line 250 of "PolicyLang.y" */
+			{
+				yyval = new ArrayList();
+				((ArrayList) yyval).add(((CpabePolicy) (yystack
+						.valueAt(1 - (1)))));
+			}
+			;
+			break;
+
+		case 21:
+			if (yyn == 21)
+
+			/* Line 351 of lalr1.java */
+			/* Line 252 of "PolicyLang.y" */
+			{
+				yyval = ((ArrayList) (yystack.valueAt(3 - (1))));
+				((ArrayList) yyval).add(((CpabePolicy) (yystack
+						.valueAt(3 - (3)))));
+			}
+			;
+			break;
+
+		/* Line 351 of lalr1.java */
+		/* Line 485 of "PolicyLang.java" */
+		default:
+			break;
+		}
+
+		yy_symbol_print("-> $$ =", yyr1_[yyn], yyval);
+
+		yystack.pop(yylen);
+		yylen = 0;
+
+		/* Shift the result of the reduction. */
+		yyn = yyr1_[yyn];
+		int yystate = yypgoto_[yyn - yyntokens_] + yystack.stateAt(0);
+		if (0 <= yystate && yystate <= yylast_
+				&& yycheck_[yystate] == yystack.stateAt(0))
+			yystate = yytable_[yystate];
+		else
+			yystate = yydefgoto_[yyn - yyntokens_];
+
+		yystack.push(yystate, yyval);
+		return YYNEWSTATE;
 	}
 
 	/*
@@ -961,8 +1013,9 @@ public class PolicyLang {
 			31, 35, 39, 43, 47, 51, 55, 59, 63, 67, 71, 73 };
 
 	/* YYRLINE[YYN] -- Source line where rule number YYN was defined. */
-	private static final byte yyrline_[] = { 0, 39, 39, 41, 42, 44, 45, 46, 47,
-			48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 60, 62 };
+	private static final short yyrline_[] = { 0, 229, 229, 231, 232, 234, 235,
+			236, 237, 238, 239, 240, 241, 242, 243, 244, 245, 246, 247, 248,
+			250, 252 };
 
 	// Report on the debug stream that the rule yyrule is going to be reduced.
 	private void yy_reduce_print(int yyrule, YYStack yystack) {
@@ -1018,100 +1071,283 @@ public class PolicyLang {
 	/* Unqualified %code blocks. */
 
 	/* Line 927 of lalr1.java */
-	/* Line 7 of "PolicyLang.y" */
+	/* Line 8 of "PolicyLang.y" */
+
+	public CpabePolicy finalPolicy;
 
 	public static void main(String args[]) {
-		PolicyLang p = new PolicyLang();
+		// PolicyLang p = new PolicyLang();
 		// String[]
 
 	}
 
 	/* Line 927 of lalr1.java */
-	/* Line 1114 of "PolicyLang.java" */
+	/* Line 26 of "PolicyLang.y" */
+
+	private SizedInteger expInt(Integer value, Integer bits) {
+		SizedInteger s = new SizedInteger();
+
+		if (bits.intValue() <= 0 || bits.intValue() >= 32) {
+			System.out.println("error parsing policy: " + value + "\t" + bits);
+			System.exit(0);
+		}
+
+		s.value = value.intValue();
+		s.bits = bits.intValue();
+
+		return s;
+	}
+
+	private SizedInteger flexInt(Integer value) {
+		SizedInteger s = new SizedInteger();
+
+		s.value = value.intValue();
+		s.bits = 0;
+
+		return s;
+	}
+
+	private CpabePolicy leafPolicy(String attr) {
+		CpabePolicy p = new CpabePolicy();
+
+		p.k = 1;
+		p.attr = attr;
+		p.children = new ArrayList();
+
+		return p;
+	}
+
+	private CpabePolicy kOf2Policy(int k, CpabePolicy l, CpabePolicy r) {
+		CpabePolicy p = new CpabePolicy();
+
+		p.k = k;
+		p.attr = null;
+		p.children = new ArrayList();
+		p.children.add(l);
+		p.children.add(r);
+
+		return p;
+	}
+
+	private CpabePolicy kOfPolicy(Integer k, ArrayList list) {
+		CpabePolicy p = new CpabePolicy();
+
+		if (k.intValue() < 1) {
+			System.out
+					.println("error parsing policy: trivially satisfied operator \""
+							+ k + " of\"");
+			System.exit(0);
+		} else if (k.intValue() > list.size()) {
+			System.out.println("error parsing policy: unsatisfied operator \""
+					+ k + " of\" (only " + list.size() + " operator)");
+			System.exit(0);
+		} else if (list.size() == 1) {
+			System.out.println("error parsing policy: identity operator \"" + k
+					+ " of\" (only one of operator)");
+			System.exit(0);
+		}
+		p.k = k.intValue();
+		p.attr = null;
+		p.children = list;
+
+		return p;
+	}
+
+	private CpabePolicy eqPolicy(SizedInteger n, String attr) {
+		if (n.bits == 0)
+			return leafPolicy(attr + "_flexint_" + n.value);
+		else
+			return leafPolicy(attr + "_expint_" + n.bits + "_" + n.value);
+	}
+
+	private CpabePolicy ltPolicy(SizedInteger n, String attr) {
+		return cmpPolicy(n, false, attr);
+	}
+
+	private CpabePolicy gtPolicy(SizedInteger n, String attr) {
+		return cmpPolicy(n, true, attr);
+	}
+
+	private CpabePolicy lePolicy(SizedInteger n, String attr) {
+		n.value++;
+		return cmpPolicy(n, false, attr);
+	}
+
+	private CpabePolicy gePolicy(SizedInteger n, String attr) {
+		n.value--;
+		return cmpPolicy(n, true, attr);
+	}
+
+	private CpabePolicy cmpPolicy(SizedInteger n, boolean gt, String attr) {
+		CpabePolicy p = new CpabePolicy();
+		String tplate;
+
+		/* some error checking */
+		if (gt && (n.value >= (1 << (n.bits > 0 ? n.bits : 31) - 1))) {
+			System.out
+					.println("error parsing policy: unsatisfiable integer comparison "
+							+ attr
+							+ " > "
+							+ n.value
+							+ "\n("
+							+ (n.bits > 0 ? n.bits : 31)
+							+ "-bits are insufficient to satisfy)");
+			System.exit(0);
+		} else if (!gt && n.value == 0) {
+			System.out
+					.println("error parsing policy: unsatisfiable integer comparison "
+							+ attr
+							+ " < 0 "
+							+ "\n(all numerical attributes are unsigned)");
+			System.exit(0);
+		} else if (!gt && (n.value > (1 << (n.bits > 0 ? n.bits : 31) - 1))) {
+			System.out
+					.println("error parsing policy: trivially satisfied integer comparison "
+							+ attr
+							+ " < "
+							+ n.value
+							+ "\n("
+							+ (n.bits > 0 ? n.bits : 31)
+							+ "-bits number will satisfy)");
+			System.exit(0);
+		}
+
+		/* create it */
+
+		/* horrible */
+		tplate = n.bits > 0 ? ("_expint" + n.bits + "_")
+				: ("_flexint_");
+
+		int bits = n.bits > 0 ? n.bits : (n.value >= (1 << 16) ? 32
+				: n.value >= (1 << 8) ? 16 : n.value >= (1 << 4) ? 8
+						: n.value >= (1 << 2) ? 4 : 2);
+		p = bitMarkerList(gt, attr, tplate, bits, n.value);
+
+		return null;
+	}
+
+	private CpabePolicy bitMarkerList(boolean gt, String attr, String tplate,
+			int bits, long value) {
+		CpabePolicy p = new CpabePolicy();
+		int i;
+
+		i = 0;
+		while (gt ? (1 << i & value) > 0 : (1 << i & value) <= 0)
+			i++;
+
+		p = leafPolicy(bitMarker(attr, tplate, i, gt));
+		for (i = i + 1; i < bits; i++)
+			if (gt)
+				p = kOf2Policy((1 << i & value) > 0 ? 2 : 1, p,
+						leafPolicy(bitMarker(attr, tplate, i, gt)));
+			else
+				p = kOf2Policy((1 << i & value) > 0 ? 1 : 2, p,
+						leafPolicy(bitMarker(attr, tplate, i, gt)));
+		return p;
+	}
+
+	private String bitMarker(String base, String tplate, int bit, boolean gt) {
+		String lx;
+		String rx;
+		String s;
+		
+		
+		
+		
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	class PolicyLangLexer implements PolicyLang.Lexer {
+		StringTokenizer st;
+
+		public PolicyLangLexer(String str) {
+			st = new StringTokenizer(str);
+		}
+
+		public void yyerror(String s) {
+			System.err.println(s);
+		}
+
+		Object yylval;
+
+		public Object getVal() {
+			return yylval;
+		}
+
+		public int yylex() throws IOException {
+			int r = 0;
+			String str;
+			while (st.hasMoreTokens()) {
+				str = st.nextToken();
+				if (str.equals("&") || str.equalsIgnoreCase("and"))
+					r = AND;
+				else if (str.equals("|") || str.equalsIgnoreCase("or"))
+					r = OR;
+				else if (str.equalsIgnoreCase("of"))
+					r = OF;
+				else if (str.equals("(") || str.equals(")") || str.equals(",")
+						|| str.equals("<") || str.equals(">")
+						|| str.equals("=") || str.equals("#"))
+					r = str.charAt(0);
+				else if (str.equals("<="))
+					r = LEQ;
+				else if (str.equals(">="))
+					r = GEQ;
+				else if (isDigit(str)) {
+					yylval = Integer.parseInt(str);
+					r = INTLIT;
+				} else if (isChars(str)) {
+					yylval = str;
+					r = TAG;
+				} else {
+					System.out.println("syntax error at " + str);
+					System.exit(0);
+				}
+			}
+
+			return r;
+		}
+
+		private boolean isDigit(String str) {
+			for (int i = 0; i < str.length(); i++)
+				if (!Character.isDigit(str.charAt(i)))
+					return false;
+			return true;
+		}
+
+		private boolean isChars(String str) {
+			if (!Character.isLetter(str.charAt(0)))
+				return false;
+			for (int i = 1; i < str.length(); i++)
+				if (!Character.isLetterOrDigit(str.charAt(i)))
+					return false;
+			return true;
+		}
+
+		@Override
+		public Object getLVal() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+	}
+
+	class CpabePolicy {
+		int k; /* one if leaf, otherwise threshold */
+		String attr; /* attribute string if leaf, null otherwise */
+		ArrayList children; /* null for leaf */
+	}
+
+	class SizedInteger {
+		long value;
+		int bits;
+	}
+
+	/* Line 927 of lalr1.java */
+	/* Line 1305 of "PolicyLang.java" */
 
 }
 
 /* Line 931 of lalr1.java */
-/* Line 66 of "PolicyLang.y" */
+/* Line 256 of "PolicyLang.y" */
 
-class PolicyLangLexer implements PolicyLang.Lexer {
-	StringTokenizer st;
-
-	public PolicyLangLex(String str) {
-		st = new StringTokenizer(str);
-
-	}
-
-	public void yyerror(String s) {
-		System.err.println(s);
-	}
-
-	Integer yylval;
-
-	public Object getVal() {
-		return yylval;
-	}
-
-	public int yylex() throws IOException {
-		char c, r;
-		String str;
-		while (st.hasMoreToken()) {
-			str = st.nextToken();
-			if (str.equals("&") || str.equalsIgnoreCase("and"))
-				r = AND;
-			else if (str .equals("|") || str.equalsIgnoreCase("or"))
-				r = OR;
-			else if (str.equalsIgnoreCase("of"))
-				r = OF;
-			else if (str .equals("(") || str .equals(")") ||
-					str.equals(",") ||
-					str.equals("<") || str.equals(">") || 
-					str.equals("=") || str.equals("#"))
-					r = str.charAt(0);
-			else if (str .equals( "<=")
-				r = LEQ;
-			else if (str .equals( ">=")
-				r = GEQ;
-			else if (isDigit(str)) {
-				yylval.Integer = 
-				r = INTLIT;
-			} else if (isChars(str)) {
-				yylval.String = str;
-				r = TAG;
-			}
-			else {
-				System.out.println("syntax error at " + str);
-				System.exit(0);
-			}
-		}
-		
-		return r;
-	}
-
-	private boolean isDigit(String str) {
-		for (int i = 0; i < str.length; i++)
-			if (!Character.isDigit(str.charAt(i)))
-				return false;
-		return true;
-	}
-
-	private boolean isChars(String str) {
-		if (!Character.isLetter(str.charAt(0)))
-			return false;
-		for (int i = 1; i < str.length; i++)
-			if (!Character.isLetterOrDigit(str.charAt(i)))
-				return false;
-		return true;
-	}
-}
-
-class CpabePolicy {
-	int k; /* one if leaf, otherwise threshold */
-	String attr; /* attribute string if leaf, null otherwise */
-	BswabePolicy[] children; /* null for leaf */
-}
-
-class SizedInteger {
-	long value;
-	int bits;
-}
