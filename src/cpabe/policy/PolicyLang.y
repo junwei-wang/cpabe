@@ -119,6 +119,85 @@ import java.util.StringTokenizer;
 		n.value--;
 		return cmpPolicy(n, true, attr);
 	}
+	private CpabePolicy cmpPolicy(SizedInteger n, boolean gt, String attr) {
+		CpabePolicy p = new CpabePolicy();
+		String tplate;
+
+		/* some error checking */
+		if (gt && (n.value >= (1 << (n.bits > 0 ? n.bits : 31) - 1))) {
+			System.out
+					.println("error parsing policy: unsatisfiable integer comparison "
+							+ attr
+							+ " > "
+							+ n.value
+							+ "\n("
+							+ (n.bits > 0 ? n.bits : 31)
+							+ "-bits are insufficient to satisfy)");
+			System.exit(0);
+		} else if (!gt && n.value == 0) {
+			System.out
+					.println("error parsing policy: unsatisfiable integer comparison "
+							+ attr
+							+ " < 0 "
+							+ "\n(all numerical attributes are unsigned)");
+			System.exit(0);
+		} else if (!gt && (n.value > (1 << (n.bits > 0 ? n.bits : 31) - 1))) {
+			System.out
+					.println("error parsing policy: trivially satisfied integer comparison "
+							+ attr
+							+ " < "
+							+ n.value
+							+ "\n("
+							+ (n.bits > 0 ? n.bits : 31)
+							+ "-bits number will satisfy)");
+			System.exit(0);
+		}
+
+		/* create it */
+
+		/* horrible */
+		tplate = n.bits > 0 ? ("_expint" + n.bits + "_")
+				: ("_flexint_");
+
+		int bits = n.bits > 0 ? n.bits : (n.value >= (1 << 16) ? 32
+				: n.value >= (1 << 8) ? 16 : n.value >= (1 << 4) ? 8
+						: n.value >= (1 << 2) ? 4 : 2);
+		p = bitMarkerList(gt, attr, tplate, bits, n.value);
+
+		return null;
+	}
+
+	private CpabePolicy bitMarkerList(boolean gt, String attr, String tplate,
+			int bits, long value) {
+		CpabePolicy p = new CpabePolicy();
+		int i;
+
+		i = 0;
+		while (gt ? (1 << i & value) > 0 : (1 << i & value) <= 0)
+			i++;
+
+		p = leafPolicy(bitMarker(attr, tplate, i, gt));
+		for (i = i + 1; i < bits; i++)
+			if (gt)
+				p = kOf2Policy((1 << i & value) > 0 ? 2 : 1, p,
+						leafPolicy(bitMarker(attr, tplate, i, gt)));
+			else
+				p = kOf2Policy((1 << i & value) > 0 ? 1 : 2, p,
+						leafPolicy(bitMarker(attr, tplate, i, gt)));
+		return p;
+	}
+
+	private String bitMarker(String base, String tplate, int bit, boolean gt) {
+		String lx;
+		String rx;
+		String s;
+		
+		
+		
+		
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 
 class PolicyLangLexer implements PolicyLang.Lexer {
