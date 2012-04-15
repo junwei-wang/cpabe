@@ -1,0 +1,44 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Filename:      abstract.tex
+% Author:        Junwei Wang(wakemecn@gmail.com)
+% Last Modified: 2012-04-15 14:44
+% Description:
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter*{摘\qquad 要}
+在分布式系统中，只有当用户拥有某些凭据或者属性才能够访问数据。
+目前，执行这种策略的唯一方式是采用一个可信的服务器来存储数据
+并调整访问控制。然而，如果任一存储数据的服务器被攻破，那么数
+据的保密性就会大打折扣。在本文中，我们提供一个称之为密文策略
+的基于属性的加密来实现对加密数据的复杂的访问控制。通过我们的
+技术，加密数据甚至可以存储在不可信的存储服务器上。此外，我们
+的方法可以抵制合谋攻击。先前的基于属性的加密方案用属性来描述
+被加密的数据，而将策略写入用户的的密钥里；然而在我们的系统中
+属性用来描述用户的凭据，加密数据的一方来决定谁可以解密的策略
+。因此，我们的加密方案在概念上更接近与传统的访问控制方法，如
+基于角色的访问控制（Role-Base Access Control，RBAC）。\par
+除此之外，我们提供了我们系统的实现和性能测试。
+\addcontentsline{toc}{section}{摘\qquad 要}
+\chapter*{ABSTRACT}
+In several distributed systems a user should only be %
+able to access data if a user possesses a certain set of %
+credentials or attributes. Currently, the only method %
+for enforcing such policies is to employ a trusted server %
+to store the data and mediate access control. However, %
+if any server storing the data is compromised, then the %
+confidentiality of the data will be compromised. In this %
+paper we present a system for realizing complex access %
+control on encrypted data that we call Ciphertext-Policy %
+Attribute-Based Encryption. By using our techniques %
+encrypted data can be kept confidential even if the %
+storage server is untrusted; moreover, our methods are %
+secure against collusion attacks. Previous Attribute-Based %
+Encryption systems used attributes to describe %
+the encrypted data and built policies into user’s keys;%
+while in our system attributes are used to describe a %
+user’s credentials, and a party encrypting data determines %
+a policy for who can decrypt. Thus, our methods %
+are conceptually closer to traditional access control %
+methods such as Role-Based Access Control (RBAC).\par
+In addition, we provide an implementation of our system %
+and give performance measurements.
+\addcontentsline{toc}{section}{ABSTRACT}

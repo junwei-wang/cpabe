@@ -1,0 +1,32 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Filename:      graduation_design.tex
+% Author:        Junwei Wang(wakemecn@gmail.com)
+% Last Modified: 2012-04-15 14:43
+% Description:
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[a4paper,12pt,oneside,openany]{ctexbook}
+\usepackage[top=1in,bottom=1in,left=1.25in,right=1.25in]{geometry}
+\usepackage{graphicx}
+\usepackage{ulem}
+% redefine the chapter 
+\usepackage{titlesec}
+\titleclass{\chapter}{straight}
+\titleformat{\chapter}[hang]
+{\centering\huge\bfseries}{第\chinese{chapter}章}{1em}{}
+% redefine the section
+\CTEXsetup[format={\Large\bf}]{section}
+\begin{document}
+% titlepage
+\include{titlepage}
+% contents
+\tableofcontents
+% abstract
+\include{abstract}
+%\include{introduction}
+\chapter{绪论}
+\chapter{相关工作}
+\chapter{背景}
+\chapter{构造}
+
+\end{document}
+
