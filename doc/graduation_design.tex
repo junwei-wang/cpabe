@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Filename:      graduation_design.tex
 % Author:        Junwei Wang(wakemecn@gmail.com)
-% Last Modified: 2012-04-15 14:43
+% Last Modified: 2012-04-16 14:42
 % Description:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \documentclass[a4paper,12pt,oneside,openany]{ctexbook}
@@ -12,9 +12,9 @@
 \usepackage{titlesec}
 \titleclass{\chapter}{straight}
 \titleformat{\chapter}[hang]
-{\centering\huge\bfseries}{第\chinese{chapter}章}{1em}{}
+{\centering\zihao{-3}\bfseries}{第\chinese{chapter}章}{1em}{}
 % redefine the section
-\CTEXsetup[format={\Large\bf}]{section}
+\CTEXsetup[format={\zihao{4}\bf}]{section}
 \begin{document}
 % titlepage
 \include{titlepage}
@@ -22,11 +22,12 @@
 \tableofcontents
 % abstract
 \include{abstract}
-%\include{introduction}
-\chapter{绪论}
-\chapter{相关工作}
-\chapter{背景}
-\chapter{构造}
-
+% introduction
+\include{introduction}
+%\chapter{相关工作}
+%\chapter{背景}
+%\chapter{构造}
+%
+\bibliographystyle{unsrt}
+\bibliography{graduation_design}
 \end{document}
-
