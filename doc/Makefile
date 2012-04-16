@@ -1,6 +1,8 @@
 prefix = graduation_design
+depend = $(prefix).tex abstract.tex titlepage.tex introduction.tex \
+	 $(prefix).bib
 all: $(prefix).pdf
-$(prefix).pdf: $(prefix).tex abstract.tex titlepage.tex
+$(prefix).pdf: $(depend)
 	xelatex $(prefix).tex 
 	bibtex $(prefix)
 	xelatex $(prefix).tex 
