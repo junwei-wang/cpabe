@@ -1,0 +1,129 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Filename:      construction.tex
+% Author:        Junwei Wang(wakemecn@gmail.com)
+% Last Modified: 2012-04-23 11:56
+% Description:
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{CP-ABE构造}
+本章中我们提供了BSW方案的构造。我们首先介绍描述密文的访问树和描述私钥的属性的模型，
+其次我们给出我们方案的描述，最后我们给出安全性，高效性的讨论。
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{模型}
+在我们的构造中私钥被描述性的属性集合$S$所确定。一方想解密数据必须拥有满足访问树结构的
+私钥。\par
+访问树中的每个内部节点是一个阈值门，叶子节点与属性关联。（请注意，这样的描述是非常
+具有表达力的。例如，我们分别用2 of 2和1 of 2的阈值门来表达树中“AND”和“OR”门。）当且
+仅当私钥的属性分配到树的节点并使树能满足，持有私钥的用户将能够解密密文。尽管在我们的
+方案里，属性用来标记私钥，我们还是用与\cite{GPSW:ABE}相同的概念来描述访问树。\par
+\vspace{5mm}
+\noindent\textbf{访问树$\mathcal{T}$}\quad 用$\mathcal{T}$代表访问结构，用通过他的孩
+子和阈值描述阈值门来代表树的每个非叶子节点。设节点$x$的孩子数目为$num_x$，阈值为$k_x$，
+那么$0<k_x\leq num_x$。当$k_x=1$，阈值门是或门；当$k_x=num_x$，阈值门是与门。树的每个
+叶子节点$x$用一个属性和阈值$k_x=1$描述。\par
+为了方便的使用访问树，我们定义了一些函数。函数$\textbf{parent}(x)$表示节点$x$的
+父节点,仅当$x$是叶子节点时，函数$\textbf{att}(x)$被定义为$x$所描述的属性。访问树
+$\mathcal{T}$同时定义了每个节点的子节点的被标记为从1到$num$的顺序索引值，函数
+$\textbf{index}(x)$定义为与节点$x$关联的这样一个索引值，且对一个给定的密钥,索引值
+以任意的方式唯一的赋值给访问结构中的节点。\par
+\vspace{5mm}
+\noindent\textbf{满足访问树}\quad 令$\mathcal{T}$是根为$r$的访问树，$\mathcal{T}_x$
+表示以$x$为根的$\mathcal{T}$的子树，因此$\mathcal{T}$等同于$\mathcal{T}_r$。如果属性
+集合$\gamma$满足访问树$\mathcal{T}_x$，我们表示为$\mathcal{T}_x(\gamma)=1$。我们用如
+下递归的方式计算$\mathcal{T}_x(\gamma)$：如果$x$是非叶子节点，对于$x$的所有孩子，
+计算$\mathcal{T}_{x'}(r)$，当且仅当至少$k_x$个孩子返回1,$\mathcal{T}_x(\gamma)$返回1；
+如果$x$是叶子节点，那么当且仅当$\textbf{attr}(x)\in \gamma$时，$\mathcal{T}_x(\gamma)$
+返回1。
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{构造}
+设$\mathbb{G}_0$是阶为素数$p$的双线性映射，$g$是$\mathbb{G}_0$的生成元，
+$e:\mathbb{G}_0\times \mathbb{G}_0\to\mathbb{G}_1$是双线性映射。安全参数$\kappa$决定
+群的规模。同时，我们定义了拉格朗日系数$\Delta_{i,S}$，$i\in\mathbb{Z}_p$，$S$是集合
+$\mathbb{Z}_p$中的元素：$\Delta_{i,S}(x)=\prod_{j\in S,j\neq i}\frac{x-j}{i-j}$。
+哈希函数$H:{0,1}^*\to \mathbb{G}_0$是random oracle，这个函数可以把任意用二进制串
+描述的的属性映射到随机的群元素。我们的构造如下。\par
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\vspace{5mm}
+\noindent\textbf{Setup}\quad 
+Setup算法选择生成元为$g$，阶为素数$p$的双线性映射
+$\mathbb{G}_0$，指数$\alpha,\beta\in\mathbb{Z}_p$。生成公钥
+$$\textrm{PK} = \mathbb{G}_0,g,h=g^{\beta},f=g^{1/\beta},e(g,g)^{\alpha}$$
+和主密钥$\textrm{MK} = \beta,g^\alpha$。（注意$f$仅用于委托。）\par
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\vspace{5mm}
+\noindent\textbf{Encryption(PK,$M$,$\mathcal{T}$)}\quad
+加密算法在树访问结构$\mathcal{T}$下加密消息$M$。算法首先为$\mathcal{T}$每个节点$x$
+（包括叶子节点）选择一个多项式$q_x$。从树的根节点$R$开始，自上而下选择多项式。节点
+$x$的多项式$q_x$的度$d_x$比该节点的阈值$k_x$少一，即$d_x=k_x-1$。\par
+算法从根节点$R$开始选择随机数$s\in\mathbb{Z}_p$，并设置$q_R(0)=s$。然后，算法随机
+选择多项式$q_R$上的$d_R$个点来完全定义$q_R$。对于其他的顶点$x$，令
+$q_x(0)=q_{parent(x)}(index(x))$，随机选择其它$d_x$个顶点来完全定义$q_x$。\par
+设$\mathcal{T}$中所有叶子节点的集合为$Y$，那么在给定的树形访问结构$\mathcal{T}$下计算
+密文
+\begin{equation*}
+\begin{split}
+\textrm{CT}=&(\mathcal{T},\widetilde{C}=Me(g,g)^{\alpha s},C=h^s,\\
+&\forall y\in Y:\quad C_y=g^{q_y(0)},C_y'=H(\textbf{att}(y))^{q_y(0)}).
+\end{split}
+\end{equation*}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\vspace{5mm}
+\noindent\textbf{KeyGen(MK,$S$)}\quad
+密钥生成算法的输入是属性集合$S$，输出为被$S$所标记的密钥。算法首先选择随机数
+$r\in \mathcal{Z}_p$，然后对每一个$j\in S$选择随机数$r_j\in \mathcal{Z}_p$。最后计算出
+私钥
+\begin{equation*}
+\begin{split}
+\textrm{SK}=&(D=g^{(\alpha+\gamma)/\beta},\\
+&\forall j\in S:\quad D_j=g^r\cdot H(k)^{rj},D_j'=g^{rj}).
+\end{split}
+\end{equation*}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\vspace{5mm}
+\noindent\textbf{Decrypt(CT,SK)}\quad
+我们的解密算法是一个递归算法。为了便于讨论，我们提出了解密算法的最简单形式，并在下一小
+节中提出了潜在的性能改进。\par
+我们首先定义递归算法Decrypt(CT,SK,$x$)，它用密文
+$\textrm{CT}=(\mathcal{T},\widetilde{C},C,\forall y\in Y:\quad C_y,C_y')$，与属性集合
+$S$关联的私钥SK，$\mathcal{T}$中的节点$x$作为输入。\par
+当节点$x$是叶子节点，令$i=\textbf{att}(x)$，如果$i\in S$，那么
+\begin{equation*}
+\begin{split}
+DecryptNode(CT,SK,x) &= \frac{e(D_i,C_x)}{e(D_i',C_x')}\\
+&=\frac{e(g^r\cdot H(i)^{r_i},g^{q_x(0)})}{e(g^{r_i},H(i)^{q_x(0)})}\\
+&=e(g,g)^{rq_x(0)}.
+\end{split}
+\end{equation*}
+如果$i\notin S$，那么DecryptNode(CT,SK,$x$)$=\perp$。\par
+现在我们考虑$x$是非叶子节点时的递归情况。算法DecryptNode(CT,SK,$x$)工作方式如下：
+对于$x$的所有字节点$z$，计算$F_z=\textrm{DecryptNode(CT,SK,}z\textrm{)}$。
+令$S_x$为$k_x$大小的满足$F_z\neq \perp$的子节点$z$的集合。如果不存在这样的集合，
+那么这个节点不满足，且函数返回$\perp$。\par
+否则，我们计算
+\begin{equation*}
+\begin{split}
+F_x &=\prod_{z\in S_x}F_x^{\Delta_{i,S_x'(0)}}
+\quad \text{,其中,$i=index(z),S_x'=\{index(z),z\in S_x\}$}\\
+&=\prod_{z\in S_x}(e(g,g)^{r\cdot q_z(0)})^{\Delta_{i,S_x'(0)}}\\
+&=\prod_{z\in S_x}(e(g,g)^{r\cdot q_{parent(z)}(index(z))})^{\Delta_{i,S_x'(0)}}\\
+&=\prod_{z\in S_x}e(g,g)^{r\cdot q_z(0)\cdot \Delta_{i,S_x'(0)}}\\
+&=e(g,g)^{r\cdot q_x(0)} \qquad \text{(使用多项式插值)}
+\end{split}
+\end{equation*}
+并返回结果。\par
+在定义了DecryptNode函数之后，我们定义解密算法。算法首先调用Decrypt(CT,SK,$R$)，
+$R$是树$\mathcal{T}$的根节点。如果树满足$S$，我们令
+$$A=\textrm{DecryptNode(CT,SK,}R\textrm{)}=e(g,g)^{rq_R(0)}=e(g,g)^{rs}$$.
+现在算法通过下面计算解密
+$$\widetilde{C}/(\frac{e(C,D)}{A})=
+\widetilde{C}/(\frac{e(h^s,g^{(\alpha+\gamma)/\beta})}{e(g,g)^{rs}})=M$$
+
+
+
+
+
+
+
+
+

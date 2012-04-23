@@ -1,11 +1,11 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Filename:      introduction.tex
 % Author:        Junwei Wang(wakemecn@gmail.com)
-% Last Modified: 2012-04-16 21:59
+% Last Modified: 2012-04-17 10:18
 % Description:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{绪论}
-\section{基于属性加密的研究背景}
+\section{基于属性的加密研究背景}
 在许多情况下，当用户对敏感数据进行加密时，这时他迫切需要建立特定
 的访问控制策略决定谁可以解密数据。例如，假设FBI在Knoxvile和San
 Francisco的公共反腐办公室调查涉及San Francisco说客行贿Tennesseei
@@ -41,7 +41,7 @@ Sahai和Waters\cite{SW:FuzzyIBE}提出了加密算法本身决定谁可以解密
 密的加密新思路。数据提供者用谓词$f(\cdot)$描述他想他想如何分享数
 据，用户被赋予与他们的凭据$X$关联的密钥;当$f(X)=1$时，拥有凭据
 $X$的用户可以解密拥有谓词$f$的密文。Sahai和Waters\cite{SW:FuzzyIBE}
-提出了这种问题的正式描述，他们称之为基于属性加密\footnote{Attribute-Based 
+提出了这种问题的正式描述，他们称之为基于属性的加密\footnote{Attribute-Based 
 Encryption, 简称ABE}。在ABE中，用户的平局被称为“属性”的字符
 串集合表示，谓词用对这些属性的公式表示。SW\footnote{Amit Sahai和
 Brent Waters}的技术受到基于身份的加密\footnote{Identity-Based 
@@ -50,15 +50,15 @@ Encryption，以下IBE}上一些工作\cite{Shamir:IBC,BF:IBE,Cocks:IBE,CHK:fspk
 公式。\par
 在随后的工作中，Goyal, Pandey, Sahai, and Waters\cite{GPSW:ABE}
 进一步阐明了ABE的概念。尤其是，他们提出了两种互补形式的ABE。
-其一是密钥策略基于属性的加密\footnote{Key-Policy ABE,简称KPABE},
-属性用来描述密文，对属性的公式用来描述用户的私钥。其二是与KPABE
-互补的密文策略基于属性的加密\footnote{Ciphertex-Policy ABE,简称
-CPABE}，属性用来描述用户的凭据即私钥，公式则被加密放附加到密文。
-除此之外。Goyal等人\cite{GPSW:ABE}提供了KPABE的一种构造。由于它
+其一是密钥策略--基于属性的加密\footnote{Key-Policy ABE,简称KP-ABE},
+属性用来描述密文，对属性的公式用来描述用户的私钥。其二是与KP-ABE
+互补的密文策略--基于属性的加密\footnote{Ciphertex-Policy ABE,简称
+CP-ABE}，属性用来描述用户的凭据即私钥，公式则被加密放附加到密文。
+除此之外。Goyal等人\cite{GPSW:ABE}提供了KP-ABE的一种构造。由于它
 允许被加密数据的密钥能够被任意单调访问公式描述，所以该构造的代
 价较高。这个系统被证明在双线型Diffie-Hellma假设下选择性安全。然
-而他们把CPABE描述性的构造留做了一个开放性问题。\par
-第一次明确解决CPABE问题的是Bethencourt，Sahia和Waters\cite{BSW:CPABE}。
+而他们把CP-ABE描述性的构造留做了一个开放性问题。\par
+第一次明确解决CP-ABE问题的是Bethencourt，Sahia和Waters\cite{BSW:CPABE}。
 他们描述了一个高效的可以描述的系统，这个系统允许加密者以任意单调
 访问公式来表达访问谓词$f$，并取得了Gyal等人\cite{GPSW:ABE}系统的
 类似表现和效率。
@@ -68,16 +68,16 @@ CPABE}，属性用来描述用户的凭据即私钥，公式则被加密放附�
 他们明确相关的属性上的访问结构。仅当用户的属性可以通过密文的访问
 结构，他才能解密密文。从数学角度讲，访问结构被描述为单调“访问树”，
 访问结构的节点由阈值门组成，叶子节点描述了属性。我们用\textbf{AND}
-来构造$n\ of\ n$阈值门，用\textbf{OR}表示$1\ of\ n$阈值门。
+来构造$n\textrm{-}of\textrm{-}n$阈值门，用\textbf{OR}表示$1\textrm{-}of\textrm{-}n$阈值门。
 \section{本文的主要技术}
 从较高的水平上讲，本文的主要工作与最近Sahai和Waters\cite{SW:FuzzyIBE},
 Goyal等人\cite{GPSW:ABE}的工作相似，但是本文却大量采用了新的技术。
-KPABE，密文与描述性的属性关联，用户的私钥与策略关联（与我们的情况
-恰好相反）。\textit{我们强调KPABE中，加密者对谁可以访问他所加密的
-数据不具有控制权，除非她选择对数据的描述性数据。}然而，他必须保证
+KP-ABE，密文与描述性的属性关联，用户的私钥与策略关联（与我们的情况
+恰好相反）。\textit{我们强调KP-ABE中，加密者对谁可以访问他所加密的
+数据不具有控制权，除非他选择对数据的描述性数据。}然而，他必须保证
 提供给用户适当的私钥以授权或者禁止用户解密密文。换言之，在
 \cite{SW:FuzzyIBE,GPSW:ABE}中，“情报”掌握在私钥询问者手中，而不是
-加密者手中。在我们的构造里，加密者决定了其他人能否访问她所加密的
+加密者手中。在我们的构造里，加密者决定了其他人能否访问他所加密的
 数据。因此，在\cite{SW:FuzzyIBE,GPSW:ABE}中的技术不适合我们，我们
 必须采用新的技术。\par
 从技术的水平上讲，我们必须达到的主要目标是\textit{可抵抗合谋攻击}:
@@ -97,4 +97,7 @@ KPABE，密文与描述性的属性关联，用户的私钥与策略关联（与
 最后，我们提供了我们构造的一个实现来展示实践中我们的系统表现是良好
 的。
 \section{本文的组织结构}
-
+本文的余下部分组织结构如下。在第二章我们将讨论相关的工作，第三章我
+们将给出我们的定义以及高效可计算双线性映射群的相关概念，第四章我们
+将讨论BSW的构造，第五章我们会提供一个CP-ABE的Java实现，第六章将是本
+文的总结。

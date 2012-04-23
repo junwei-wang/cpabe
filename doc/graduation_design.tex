@@ -1,13 +1,15 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Filename:      graduation_design.tex
 % Author:        Junwei Wang(wakemecn@gmail.com)
-% Last Modified: 2012-04-16 16:35
+% Last Modified: 2012-04-23 09:56
 % Description:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \documentclass[a4paper,12pt,oneside,openany]{ctexbook}
 \usepackage[top=1in,bottom=1in,left=1.25in,right=1.25in]{geometry}
 \usepackage{graphicx}
 \usepackage{ulem}
+\usepackage{amsfonts,amssymb}
+\usepackage{amsmath}
 % redefine the chapter 
 \usepackage{titlesec}
 \titleclass{\chapter}{straight}
@@ -15,6 +17,10 @@
 {\centering\zihao{-3}\bfseries}{第\chinese{chapter}章}{1em}{}
 % redefine the section
 \CTEXsetup[format={\zihao{4}\bf}]{section}
+% 取消中文连字符与文字间的空格
+\normalspacedchars{-}
+% 定义"defination"环境
+\newtheorem{Definition}{定义}
 \begin{document}
 % titlepage
 \include{titlepage}
@@ -22,11 +28,14 @@
 \tableofcontents
 % abstract
 \include{abstract}
-% introduction
+% 绪论 
 \include{introduction}
-%\chapter{相关工作}
-%\chapter{背景}
-%\chapter{构造}
+% 相关工作
+\include{related_work}
+% 背景 
+\include{background}
+% 构造
+\include{construction}
 %
 \bibliographystyle{plain}
 \bibliography{graduation_design}

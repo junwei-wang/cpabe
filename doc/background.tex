@@ -1,0 +1,76 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Filename:      background.tex
+% Author:        Junwei Wang(wakemecn@gmail.com)
+% Last Modified: 2012-04-21 22:01
+% Description:
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{背景}
+我们首先给出CP-ABE安全性的正式定义，然后我们给出双线性映射的背景信息。如同Goyal等人
+\cite{GPSW:ABE}所做，我们定义访问结构并在我们的安全性定义中使用；不同的是，在我们的
+定义中属性将用来描述用户，访问结构用来标记被加密的数据。
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{定义}
+\begin{Definition}[访问结构\cite{Beimel:SSSS}]
+令$\{P_1,P_2,...,P_n\}$是所有的参与方集合。集合$\mathbb{A}\subseteq 2^{\{P_1,P_2,...,P_n\}}$
+是单调的是指：对于任意$B,C$，如果$B\in\mathbb{A}$且$B\subseteq C$，则$C\in\mathbb{A}$。
+访问结构（特别的，单调访问结构）是$\{P_1,P_2,...,P_n\}$的非空子集，例如，
+$\mathbb{A}\subseteq 2^{\{P_1,P_2,...,P_n\}}\setminus\{\emptyset\}$，
+的集合$\mathbb{A}$（特别的，单调集合）。集合$\mathbb{A}$中的集合被称为授权集，不在
+集合$\mathbb{A}$中的集合被称为未授权集。
+\end{Definition}
+\par
+在我们的论述中，参与方被属性所代替，因此，访问结构$\mathbb{A}$包含了授权属性集。本文中
+我们只注意单调访问结构，但是，以我们的技术实现通用的访问结构是可能的。从现在开始，除非
+特别强调，访问结构是指单调访问结构。\par
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{CP-ABE方案}
+一个CP-ABE机制包含四个基本的算法：Setup，Encrypt，KeyGen和Decrypt。\\
+\textbf{Setup}\quad Setup算法的输入只有隐含的安全参数，输出公共参数PK和主密钥MK。\\
+\textbf{Encrypt(Pk,$M$,$\mathbb{A}$)}\quad 加密算法的输入是公共参数PK，明文$M$和属性全集
+上的访问结构$\mathbb{A}$。算法加密明文$M$，产生密文CT，只有用户持有满足访问结构的属性
+集合才能解密消息。我们假定密文隐含访问结构$\mathbb{A}$。\\
+\textbf{Key Generation(MK,$S$)}\quad
+密钥生成算法的输入是主密钥MK和描述私钥的属性集合$S$，输出是私钥SK。\\
+\textbf{Decrypt(PK,CT,SK)}\quad
+解密算法的输入是公共参数PK，包含访问策略$\mathbb{A}$的密文CT和属性集合$S$生成的私钥SK。
+如果集合$S$满足访问结构$\mathbb{A}$那么算法会解密密文CT返回消息$M$。\par
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+现在我们将描述CP-ABE方案的安全模型。如同IBE方案\cite{Shamir:IBC,BF:IBE,Cocks:IBE}的安全
+模型，CP-ABE方案的安全模型允许敌手询问任何比能解密密文的私钥，即在我们的安全定义中敌手
+挑战访问结构$\mathbb{A}^{*}$的解密，并且可以询问不满足$\mathbb{S}^{*}$的私钥$S$。
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{CP-ABE安全模型}
+现在我们给出正式的安全游戏。\\
+\textbf{Setup}\quad 挑战者运行Setup算法并将得到的公共参数PK交给敌手。\\
+\textbf{阶段1}\quad 敌手反复生成对应于属性集$S_1,...,S_{q_1}$的私钥。\\
+\textbf{Challenge}\quad 敌手提供两个等长的信息$M_0$和$M_1$。除此之外，敌手提供一个阶段1
+中所有属性集合$S_1,...,S_{q1}$都不满足的挑战访问结构$\mathbb{A^*}$。挑战者随机选取
+$b\in{0,1}$，在访问结构$\mathbb{A^*}$下加密$M_b$，并将密文$CT^*$敌手。\\
+\textbf{阶段2}\quad 在属性集合$S_{q_1},...,S_q$不能满足对应的挑战访问结构的限制下重复
+阶段1。\\
+\textbf{Guess}\quad 敌手输出对$b$的猜测$b'$。\par
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\vspace{3mm}
+在上述游戏中敌手$\mathcal{A}$的优势被定义为$\mathrm{Pr}[b'=b]-\frac{1}{2}$。我们注意到这个模型可以通过在阶段1和阶段2中允许解密敌手询问的明文来扩展为可以处理选择明文攻击的情形。
+\begin{Definition}
+在上述游戏中，如果多项式时间内敌手最多有可以忽略的优势，那么CP-ABE方案是安全的。
+\end{Definition}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{双线性映射}
+我们提出一些与群相关的高效可计算双线型映射的事实。\par
+设$\mathbb{G}_0$和$\mathbb{G}_1$是阶为素数$p$的两个乘法循环群，$g$是$\mathbb{G}_0$
+的生成元，$e:\mathbb{G}_0\times \mathbb{G}_0\to \mathbb{G}_1$。双线性映射$e$具有以
+下性质：
+\begin{enumerate}
+\setlength{\itemsep}{0pt}
+\item 双线性：对于任意$u,v\in \mathbb{G}_0$和任意$a,b\in \mathbb{Z}_p$，我们有
+$e(u^a,v^b) =e(u,v)^{ab}$
+\item 非退化性：$e(g,g)\neq 1$
+\end{enumerate}
+\par
+如果$\mathbb{G}_0$中的群操作和双线性映射
+$e:\mathbb{G}_0\times \mathbb{G}_0\to\mathbb{G}_1$都是高效可计算的，我们称
+$\mathbb{G}_0$为双线性群。请注意由于$e(g^a,g^b)=e(g,g)^{ab}=e(g^b,g^a)$，
+双线性映射$e$具有对称性。
