@@ -16,9 +16,3 @@ $(prefix).pdf: $(depend)
 	- rm *.blg
 clean:
 	- rm *.pdf
-	- rm *.aux
-	- rm *.toc
-	- rm *.log
-	- rm *.dvi
-	- rm *.bbl
-	- rm *.blg
