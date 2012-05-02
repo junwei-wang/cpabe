@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Filename:      implementation.tex
 % Author:        Junwei Wang(wakemecn@gmail.com)
-% Last Modified: 2012-05-02 11:12
+% Last Modified: 2012-05-02 18:11
 % Description:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{实现}
@@ -33,5 +33,18 @@ $\gamma$满足$\mathbf{restrict}(\mathcal{T},M)$。同时假设$M$是最小的�
 孩子数比阈值大。设$L \subseteq M$是$M$中的叶子节点。那么对于每一个$l \in L$，
 $l$到$r$的路径表示为
 $$\rho(l)=(l,\mathbf{parent}(l),\mathbf{parent}(\mathbf{parent}(l)),...r) .$$
-同时，
+同时，节点$x$的兄弟节点（包括$x$）表示为
+$$\mathbf{sibs}(x)=\{y\mid \mathbf{parent}(x)=\mathbf{parent}(y)\}\quad.$$
+在上述概念的基础上，我们可以继续直接计算Decrypt(CT,SK,$r$)的结果。首先，对每个
+$l\in L$计算
+\begin{align*}
+z_l = \prod_{x\in \rho(l)\atop x\neq r}\quad \text{其中$i=\mathbf{index}(x),
+S=\{\mathbf{y}|y\in\mathbf{sibs}(x)\}$ ,}
+\end{align*}
+然后计算
+$$\mathrm{DecryptNode(CT,SK,}r\mathrm{)}
+=\prod_{l\in L\atop i=\mathbf{att}(l)}
+(\frac{e(D_i,C_l)}{e(D_i',C_l')})^{z_l}$$
+
+
 
