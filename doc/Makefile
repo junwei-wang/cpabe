@@ -1,6 +1,6 @@
 prefix = graduation_design
-depend = $(prefix).tex abstract.tex titlepage.tex introduction.tex \
-	 related_work.tex background.tex construction.tex \
+depend = $(prefix).tex abstract.tex titlepage.tex introduction.tex related_work.tex \
+	 background.tex construction.tex implementation.tex \
 	 $(prefix).bib
 all: $(prefix).pdf
 $(prefix).pdf: $(depend)
