@@ -1,1 +1,12 @@
-Ciphertext-Policy Attribute-Based Encryption
+This software is a Java realization for "ciphertext-policy attribute based
+encryption" (CP-ABE).
+
+To use this software, you will need to have the Java Pairing Based Cryptography
+Library(jPBC) library installed. You can get it from the following page:
+
+   http://gas.dia.unisa.it/projects/jpbc/
+
+For more information on CP-ABE and a tutorial on using the tools, see
+the project homepage:
+
+   http://wakemecn.github.com/cpabe/
