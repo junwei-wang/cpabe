@@ -1,0 +1,92 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>cpabe by wakemecn</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>cpabe</h1>
+        <p>Ciphertext-Policy Attribute-Based Encryption</p>
+        <p class="view"><a href="https://github.com/wakemecn/cpabe">View the Project on GitHub <small>wakemecn/cpabe</small></a></p>
+        <ul>
+          <li><a href="https://github.com/wakemecn/cpabe/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/wakemecn/cpabe/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/wakemecn/cpabe">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h3>Welcome to CPABE Pages.</h3>
+
+<p>The cpabe toolkit provides a set of programs implementing a ciphertext-policy attribute-based encryption scheme. It uses the jPBC library for the algebraic operations. </p>
+
+<h3>Papers</h3>
+
+<p>The scheme is implemented as described in the following paper.</p>
+
+<ul>
+<li>
+<p><a href="http://www.cs.berkeley.edu/%7Ebethenco/oakland07cpabe.pdf">Ciphertext-Policy Attribute-Based Encryption </a></p>
+
+<p><a href="http://www.cs.berkeley.edu/%7Ebethenco/">John Bethencourt</a>, <a href="http://www.cs.ucla.edu/%7Esahai/">Amit Sahai</a>, and <a href="http://www.cs.utexas.edu/%7Ebwaters/">Brent Waters</a>. <a href="http://www.ieee-security.org/TC/SP2007/oakland07.html">28th IEEE Symposium on Security and Privacy (Oakland)</a> , May 2006.</p>
+</li>
+</ul><h3>Documentation</h3>
+
+<p>Just use this software as the Demo in the source file.
+Besides, I also provide some tips.</p>
+
+<p><code>public void setup(String pubfile, String mskfile)</code></p>
+
+<blockquote>
+<p>setup is the process of initilize public parameters and master key, "pubfile" is your public file and "mskfile" is the path for your master key file.</p>
+</blockquote>
+
+<p><code>public void keygen(String pubfile, String prvfile, String mskfile, String attr_str)</code></p>
+
+<blockquote>
+<p>keygen is the process of generate private key, "prvfile" presents the path for you private key file and
+"attr_str" presents your private attributes(order of attributes is not important). For example, <code>tom_attr_str="Tom cat master_degree vice_monitor ";jack_attr_str="Jack mouse doctor_degree monitor 3_years_old"</code></p>
+</blockquote>
+
+<p><code>public void enc(String pubfile, String policy, String inputfile, String encfile)</code></p>
+
+<blockquote>
+<p>enc is the process of encrypt file with public file and policy. "policy" for the access structure, "inputfile" for the file to be encrypted and encfile is the result. 
+The policy of "policy" is like follows, <code>"Tom mouse 2of2 doctor_degree vice_monitor 2of3 cat 1of2"</code> means
+one must keeps attribute that  <code>(at least 2 in ((Tom and mouse), doctore_degree,vice_monitor)) or cat</code> can decrypt the file.</p>
+</blockquote>
+
+<p><code>public void dec(String pubfile, String prvfile, String encfile, String decfile)</code></p>
+
+<blockquote>
+<p>dec is the process of decryption of "encfile", and result to "decfile".</p>
+</blockquote>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/wakemecn">wakemecn</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-31359099-1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
