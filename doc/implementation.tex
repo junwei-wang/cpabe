@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Filename:      implementation.tex
 % Author:        Junwei Wang(wakemecn@gmail.com)
-% Last Modified: 2012-05-02 18:24
+% Last Modified: 2012-05-04 15:35
 % Description:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{实现}
@@ -46,12 +46,43 @@ S=\{\mathbf{y}|y\in\mathbf{sibs}(x)\}$ ,}
 然后计算
 $$\mathrm{DecryptNode(CT,SK,}r\mathrm{)}
 =\prod_{l\in L\atop i=\mathbf{att}(l)}
-(\frac{e(D_i,C_l)}{e(D_i',C_l')})^{z_l}\quad .$$
+\left(\frac{e(D_i,C_l)}{e(D_i',C_l')}\right)^{z_l}\quad .$$
 用这种方法，整个解密算法中指数运算的次数从$M-1$（例如，除去根节点以外的每个节点一次）
-减少为$|L|$，配对的次数为$2|L|$。
+减少为$|L|$，配对的次数为$2|L|$。\par
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \vspace{5mm}
 \textbf{合并配对}\quad
+合并具有相同属性的叶子可能进一步较少配对的数目。如果对于$L$中的某些$l_1,l_2$，有
+$\mathbf{att}(l_1)=\mathbf{att}(l_2)=i$
+，那么
+\begin{equation*}
+\begin{split}
+&\left(\frac{e(D_i,C_{l_1})}{e(D_i',C_{l_1}')}\right)^{z_{l_1}}
+\cdot\left(\frac{e(D_i,C_{l_2})}{e(D_i',C_{l_2}')}\right)^{z_{l_2}}\\
+=&\frac{e(D_i,C_{l_1}^{z_{l_1}})}{e(D_i',C_{l_1}^{z_{l_1}})}
+\cdot\frac{e(D_i,{C'}_{l_2}^{z_{l_2}})}{e(D_i',{C'}_{l_2}^{z_{l_2}})}\\
+=&\frac{e(D_i,C_{l_1}^{z_{l_1}}\cdot C_{l_2}^{z_{l_2}})}
+{e(D_i,{C'}_{l_1}^{z_{l_1}}\cdot {C'}_{l_2}^{z_{l_2}})}\quad .
+\end{split}
+\end{equation*}
+利用这个事实，我们合并$L$中所有互相不同的属性的配对，配对总数减少至$2m$，$m$是出现在
+$L$中不同的属性的个数。但是请注意，幂运算的次数增加了，且某些幂运算现在执行在
+$\mathbb{G}_0$上而不是$\mathbb{G}_1$上。具体来讲，如果$m'$是至少与其他叶子节点分享属性
+的叶子节点的数目，那么我们在$\mathbb{G}_0$和$\mathbb{G}_1$上分别执行$2m'$次，$|L|-m'$
+次指数运算，而不是分别为$0$次，$|L|$次。如果椭圆曲线群$\mathbb{G}_0$上的幂运算比与其
+阶相同的有限域$\mathbb{G}_1$慢，那么这个技术将潜在的增加解密的时间。我们将在4.3节讨论
+这个权衡。
+\section{\texttt{cpabe}使用范例}
+我们给出了第三章构造的实现，称之为\texttt{cpabe}包\cite{cpabe}，并在GPL协议\cite{gpl}
+下发布，实现使用了jPBC库\cite{jPBC}\footnote{jPBC遵循LGPL协议发布}。\texttt{cpabe}包
+的接口可以按照如下方式直接被其它大型的系统调用。\par
+\lstinputlisting[caption=Setup]{Setup.java}
+\lstinputlisting[caption=Keygen]{Keygen.java}
+\lstinputlisting[caption=Enc]{Enc.java}
+\lstinputlisting[caption=Dec]{Dec.java}
+
+
+
 
 
 

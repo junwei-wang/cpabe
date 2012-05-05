@@ -1,7 +1,7 @@
 prefix = graduation_design
 depend = $(prefix).tex abstract.tex titlepage.tex introduction.tex related_work.tex \
-	 background.tex construction.tex implementation.tex \
-	 $(prefix).bib
+	 background.tex construction.tex implementation.tex Setup.java Keygen.java\
+	 Enc.java Dec.java $(prefix).bib
 all: $(prefix).pdf
 $(prefix).pdf: $(depend)
 	xelatex $(prefix).tex 
@@ -14,5 +14,6 @@ $(prefix).pdf: $(depend)
 	- rm *.dvi
 	- rm *.bbl
 	- rm *.blg
+	- rm *.out
 clean:
 	- rm *.pdf

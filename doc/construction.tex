@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Filename:      construction.tex
 % Author:        Junwei Wang(wakemecn@gmail.com)
-% Last Modified: 2012-04-25 20:21
+% Last Modified: 2012-05-03 10:28
 % Description:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{CP-ABE构造}
@@ -116,8 +116,8 @@ F_x &=\prod_{z\in S_x}F_x^{\Delta_{i,S_x'(0)}}
 $R$是树$\mathcal{T}$的根节点。如果树满足$S$，我们令
 $$A=\textrm{DecryptNode(CT,SK,}R\textrm{)}=e(g,g)^{rq_R(0)}=e(g,g)^{rs}$$.
 现在算法通过下面计算解密
-$$\widetilde{C}/(\frac{e(C,D)}{A})=
-\widetilde{C}/(\frac{e(h^s,g^{(\alpha+\gamma)/\beta})}{e(g,g)^{rs}})=M$$
+$$\widetilde{C}/\left(\frac{e(C,D)}{A}\right)=
+\widetilde{C}/\left(\frac{e(h^s,g^{(\alpha+\gamma)/\beta})}{e(g,g)^{rs}}\right)=M$$
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{直觉安全和效率}
