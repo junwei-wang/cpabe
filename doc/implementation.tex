@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Filename:      implementation.tex
 % Author:        Junwei Wang(wakemecn@gmail.com)
-% Last Modified: 2012-05-04 15:35
+% Last Modified: 2012-05-05 10:28
 % Description:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{实现}
@@ -75,11 +75,12 @@ $\mathbb{G}_0$上而不是$\mathbb{G}_1$上。具体来讲，如果$m'$是至少
 \section{\texttt{cpabe}使用范例}
 我们给出了第三章构造的实现，称之为\texttt{cpabe}包\cite{cpabe}，并在GPL协议\cite{gpl}
 下发布，实现使用了jPBC库\cite{jPBC}\footnote{jPBC遵循LGPL协议发布}。\texttt{cpabe}包
-的接口可以按照如下方式直接被其它大型的系统调用。\par
+的可以点用CPABE类的如下成员函数的方式直接被其它大型的系统调用。
 \lstinputlisting[caption=Setup]{Setup.java}
 \lstinputlisting[caption=Keygen]{Keygen.java}
 \lstinputlisting[caption=Enc]{Enc.java}
 \lstinputlisting[caption=Dec]{Dec.java}
+附录A包含一个具体的调用实例。
 
 
 

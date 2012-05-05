@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Filename:      graduation_design.tex
 % Author:        Junwei Wang(wakemecn@gmail.com)
-% Last Modified: 2012-05-04 15:29
+% Last Modified: 2012-05-05 09:46
 % Description:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \documentclass[a4paper,12pt,oneside,openany]{ctexbook}
@@ -11,6 +11,15 @@
 \usepackage{amsfonts,amssymb}
 \usepackage{amsmath}
 \usepackage{hyperref}
+\usepackage{titlesec}
+%%       \titleformat{\chapter}[display]
+%%             {\normalfont\Large\bfseries}{\thechapter}{11pt}{\Large}
+%%       \titleformat{\section}
+%%             {\normalfont\large\bfseries}{\thesection}{11pt}{\large}
+%%       \titlespacing*{\chapter}{0pt}{0pt}{15pt} %left, beforesep, aftersep, right
+%%       \titlespacing*{\section}{0pt}{3.5ex plus 1ex minus .2ex}{2.3ex plus .2ex}
+%%
+\usepackage[titletoc]{appendix}
 %%%%%%%%%%%%%code style%%%%%%%%%%
 \usepackage{xcolor}
 %\renewcommand{\sfdefault}{phv}
@@ -80,6 +89,8 @@
 \include{construction}
 % 实现
 \include{implementation}
+% 附录
+\include{appendix}
 
 \bibliographystyle{plain}
 \bibliography{graduation_design}
