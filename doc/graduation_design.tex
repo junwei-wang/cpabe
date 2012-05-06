@@ -1,28 +1,59 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Filename:      graduation_design.tex
 % Author:        Junwei Wang(wakemecn@gmail.com)
-% Last Modified: 2012-05-05 09:46
+% Last Modified: 2012-05-06 11:07
 % Description:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\documentclass[a4paper,12pt,oneside,openany]{ctexbook}
+\documentclass[a4paper,12pt,oneside,openany]{book}
+\usepackage{ctex}
 \usepackage[top=1in,bottom=1in,left=1.25in,right=1.25in]{geometry}
 \usepackage{graphicx}
 \usepackage{ulem}
 \usepackage{amsfonts,amssymb}
 \usepackage{amsmath}
 \usepackage{hyperref}
-\usepackage{titlesec}
-%%       \titleformat{\chapter}[display]
-%%             {\normalfont\Large\bfseries}{\thechapter}{11pt}{\Large}
-%%       \titleformat{\section}
-%%             {\normalfont\large\bfseries}{\thesection}{11pt}{\large}
-%%       \titlespacing*{\chapter}{0pt}{0pt}{15pt} %left, beforesep, aftersep, right
-%%       \titlespacing*{\section}{0pt}{3.5ex plus 1ex minus .2ex}{2.3ex plus .2ex}
+\usepackage[bf,small,center,indentafter,pagestyles]{titlesec}
+% redefine some name
+\renewcommand{\chaptername}{第\chinese{chapter}章}
+\renewcommand{\bibname}{参考文献}
+% redefine the chapter section
+\titleclass{\chapter}{straight}
+\titleformat{\chapter}[hang]
+{\centering\zihao{-3}\bfseries}{第\chinese{chapter}章}{1em}{}
+\titleformat{\section}
+{\normalfont\zihao{4}\bfseries}{\thesection}{11pt}{\large}
+% define pagehead style
+\newpagestyle{firstpage}{
+}
+\newpagestyle{abstract}{
+    \sethead{}{}{\kaishu\small\hfill 摘\qquad 要\hfill \thepage}
+    \setfoot{}{}{}\headrule
+}
+\newpagestyle{tableofcontent}{
+    \sethead{}{}{\kaishu\small\hfill 目\qquad 录 \hfill \thepage}
+    \setfoot{}{}{}\headrule
+}
+\newpagestyle{main}{
+   \sethead{}{}{\kaishu\small\hfill \chaptername\quad\chaptertitle\hfill\thepage}
+   \setfoot{}{}{}\headrule
+}
 %%
+\usepackage{titletoc}
 \usepackage[titletoc]{appendix}
+%定义目录格式
+\titlecontents{chapter}[0em]{\normalsize}
+{\thecontentslabel\hspace*{1em}}{\hspace*{-2.3em}}
+{\titlerule*[0.8pc]{.}\contentspage}
+
+\titlecontents{section}[0em]{\normalsize}
+{\thecontentslabel\hspace*{1em}}{\hspace*{-2.3em}}
+{\titlerule*[0.8pc]{.}\contentspage}
+
+\titlecontents{subsection}[0em] {\normalsize}
+{\thecontentslabel\hspace*{1em}}{\hspace*{-2.3em}}
+{\titlerule*[0.8pc]{.}\contentspage}
 %%%%%%%%%%%%%code style%%%%%%%%%%
 \usepackage{xcolor}
-%\renewcommand{\sfdefault}{phv}
 \renewcommand{\ttdefault}{phv}
 \usepackage{listings}
 \renewcommand{\lstlistingname}{代码}
@@ -61,25 +92,25 @@
 \DeclareCaptionFormat{listing}{\colorbox[cmyk]{0.43, 0.35, 0.35,0.01}{\parbox{\textwidth}{#1#2#3}}}
 \captionsetup[lstlisting]{format=listing,justification=raggedright,labelfont=white,textfont=white, singlelinecheck=false, margin=0pt, font={sf,bf,footnotesize}}
 %%%%%%%%%%%%%code style%%%%%%%%%%
-% redefine the chapter 
-\usepackage{titlesec}
-\titleclass{\chapter}{straight}
-\titleformat{\chapter}[hang]
-{\centering\zihao{-3}\bfseries}{第\chinese{chapter}章}{1em}{}
-% redefine the section
-\CTEXsetup[format={\zihao{4}\bf}]{section}
 % 取消中文连字符与文字间的空格
 \normalspacedchars{-}
 % 定义"defination"环境
 \newtheorem{Definition}{定义}
 \begin{document}
 % titlepage
+\frontmatter
+\pagestyle{firstpage}
 \include{titlepage}
-% contents
-\tableofcontents
 % abstract
+\pagestyle{abstract}
 \include{abstract}
+% contents
+\pagestyle{tableofcontent}
+\renewcommand{\contentsname}{目\quad 录}
+\tableofcontents
 % 绪论 
+\mainmatter
+\pagestyle{main}
 \include{introduction}
 % 相关工作
 \include{related_work}
@@ -92,6 +123,7 @@
 % 附录
 \include{appendix}
 
+\addcontentsline{toc}{chapter}{\qquad 参考文献}
 \bibliographystyle{plain}
 \bibliography{graduation_design}
 \end{document}
