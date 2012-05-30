@@ -11,10 +11,10 @@ object JCpabeSetup {
   val parser = new ArgotParser("JCpabeKeygen", preUsage=Some("Version 1.0"))
   
   val pubfile = 
-    parser.option[String](List("p", "public-file"), "p","Public Key output location")
+    parser.option[String](List("p", "public-file"), "file path","Public Key output location")
    
   var mskfile =
-	parser.option[String](List("m", "master-file"), "m","Master Key output location")
+	parser.option[String](List("m", "master-file"), "file path","Master Key output location")
   
   def run = {
 	  val cp = new Cpabe()
