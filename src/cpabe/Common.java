@@ -88,7 +88,9 @@ public class Common {
 		res[2] = mBuf;
 		return res;
 	}
-	
+	/**
+	 * Return a ByteArrayOutputStream instead of writing to a file
+	 */
 	public static ByteArrayOutputStream writeCpabeData(byte[] mBuf,
 			byte[] cphBuf, byte[] aesBuf) throws IOException {
 		int i;
@@ -111,7 +113,9 @@ public class Common {
 		os.close();
 		return os;
 	}
-
+	/**
+	 * Read data from an InputStream instead of taking it from a file.
+	 */
 	public static byte[][] readCpabeData(InputStream is) throws IOException {
 		int i, len;
 		
