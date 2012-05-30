@@ -1,4 +1,4 @@
-package main
+package util
 import cpabe.Cpabe
 import org.clapper.argot._
 import ArgotConverters._
