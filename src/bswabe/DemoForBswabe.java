@@ -9,6 +9,8 @@ public class DemoForBswabe {
 	/* come test data, choose attr and policy */
 	/* TODO attr is alphabetic order */
 	static String[] attr = { "baf", "fim1", "fim", "foo" };
+	static String[] attr_delegate_ok = {"fim", "foo"};
+	static String[] attr_delegate_ko = {"fim"};
 	static String policy = "foo bar fim 2of3 baf 1of2";
 
 	static String[] attr_kevin = {
@@ -364,12 +366,12 @@ public class DemoForBswabe {
 	public static void main(String[] args) throws Exception {
 		BswabePub pub = new BswabePub();
 		BswabeMsk msk = new BswabeMsk();
-		BswabePrv prv;
+		BswabePrv prv, prv_delegate_ok, prv_delegate_ko;
 		BswabeCph cph;
 
 		//attr = attr_kevin;
-		 attr = attr_sara;
-		 policy = policy_kevin_or_sara;
+		//attr = attr_sara;
+		//policy = policy_kevin_or_sara;
 
 		println("//demo for bswabe: start to setup");
 		Bswabe.setup(pub, msk);
@@ -378,6 +380,14 @@ public class DemoForBswabe {
 		println("//demo for bswabe: start to keygen");
 		prv = Bswabe.keygen(pub, msk, attr);
 		println("//demo for bswabe: end to keygen");
+
+		println("//demo for bswabe: start to delegate_ok");
+		prv_delegate_ok = Bswabe.delegate(pub, prv, attr_delegate_ok);
+		println("//demo for bswabe: end to delegate_ok");
+
+		println("//demo for bswabe: start to delegate_ko");
+		prv_delegate_ko = Bswabe.delegate(pub, prv, attr_delegate_ko);
+		println("//demo for bswabe: end to delegate_ko");
 
 		println("//demo for bswabe: start to enc");
 		cph = Bswabe.enc(pub, policy).cph;
@@ -390,6 +400,22 @@ public class DemoForBswabe {
 			System.out.println("succeed in decrpt");
 		else
 			System.out.println("failed to decrpting");
+
+		println("//demo for bswabe: start to dec with ok delegated key");
+		res = Bswabe.dec(pub, prv_delegate_ok, cph).b;
+		println("//demo for bswabe: end to dec with ok delegated key");
+		if (res)
+		    System.out.println("succeed in decript with ok delegated key");
+		else
+		    System.out.println("failed to decripting with ok delegated key");
+
+		println("//demo for bswabe: start to dec with ko delegated key");
+		res = Bswabe.dec(pub, prv_delegate_ko, cph).b;
+		println("//demo for bswabe: end to dec with ko delegated key");
+		if (res)
+		    System.out.println("succeed in decript with ko delegated key");
+		else
+		    System.out.println("failed to decripting with ko delegated key");
 	}
 
 	private static void println(Object o) {
