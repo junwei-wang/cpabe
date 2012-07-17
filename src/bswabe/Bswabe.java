@@ -133,6 +133,78 @@ public class Bswabe {
 		return prv;
 	}
 
+    /*
+     * Delegate a subset of attribute of an existing private key.
+     */
+    public static BswabePrv delegate(BswabePub pub, BswabePrv prv_src, String[] attrs_subset)
+        throws NoSuchAlgorithmException, IllegalArgumentException {
+
+        BswabePrv prv = new BswabePrv();
+        Element g_rt, rt, f_at_rt;
+        Pairing pairing;
+
+        /* initialize */
+        pairing = pub.p;
+        prv.d = pairing.getG2().newElement();
+
+        g_rt = pairing.getG2().newElement();
+        rt = pairing.getZr().newElement();
+        f_at_rt = pairing.getZr().newElement();
+
+        /* compute */
+        rt.setToRandom();
+        f_at_rt = pub.f.powZn(rt);
+        prv.d = prv_src.d.mul(f_at_rt);
+
+        g_rt = pub.gp.powZn(rt);
+
+        int i, len = attrs_subset.length;
+        prv.comps = new ArrayList<BswabePrvComp>();
+
+        for (i = 0; i < len; i++) {
+            BswabePrvComp comp = new BswabePrvComp();
+            Element h_rtp;
+            Element rtp;
+
+            comp.attr = attrs_subset[i];
+
+            BswabePrvComp comp_src = new BswabePrvComp();
+            boolean comp_src_init = false;
+
+            for (int j = 0; j < prv_src.comps.size(); ++j) {
+                if (prv_src.comps.get(j).attr == comp.attr) {
+                    comp_src = prv_src.comps.get(j);
+                    comp_src_init = true;
+                    break;
+                }
+            }
+
+            if (comp_src_init == false) {
+                throw new IllegalArgumentException();
+            }
+
+            comp.d = pairing.getG2().newElement();
+            comp.dp = pairing.getG1().newElement();
+            h_rtp = pairing.getG2().newElement();
+            rtp = pairing.getZr().newElement();
+
+            elementFromString(h_rtp, comp.attr);
+            rtp.setToRandom();
+
+            h_rtp = h_rtp.powZn(rtp);
+
+            comp.d = g_rt.mul(h_rtp);
+            comp.d = comp_src.d.mul(comp.d);
+
+            comp.dp = pub.g.powZn(rtp);
+            comp.dp = comp_src.dp.mul(comp.dp);
+
+            prv.comps.add(comp);
+        }
+
+        return prv;
+    }
+
 	/*
 	 * Pick a random group element and encrypt it under the specified access
 	 * policy. The resulting ciphertext is returned and the Element given as an
