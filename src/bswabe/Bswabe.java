@@ -29,7 +29,7 @@ public class Bswabe {
 			+ "exp2 159\n" + "exp1 107\n" + "sign1 1\n" + "sign0 1\n";
 
 	public static void setup(BswabePub pub, BswabeMsk msk) {
-		Element alpha;
+		Element alpha, beta_inv;
 
 		CurveParameters params = new DefaultCurveParameters()
 				.load(new ByteArrayInputStream(curveParams.getBytes()));
@@ -39,6 +39,7 @@ public class Bswabe {
 		Pairing pairing = pub.p;
 
 		pub.g = pairing.getG1().newElement();
+		pub.f = pairing.getG1().newElement();
 		pub.h = pairing.getG1().newElement();
 		pub.gp = pairing.getG2().newElement();
 		pub.g_hat_alpha = pairing.getGT().newElement();
@@ -58,6 +59,11 @@ public class Bswabe {
 		// PrintArr("pub.h: ", pub.h.toBytes());
 		// PrintArr("msk.beta: ", msk.beta.toBytes());
 		// PrintArr("alpha: ", alpha.toBytes());
+
+		beta_inv = pairing.getZr().newElement();
+		beta_inv = msk.beta.invert();
+		pub.f = pub.g.powZn(beta_inv);
+
 		pub.h = pub.g.powZn(msk.beta);
 
 		pub.g_hat_alpha = pairing.pairing(pub.g, msk.g_alpha);
