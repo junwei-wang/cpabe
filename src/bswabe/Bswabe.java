@@ -324,7 +324,7 @@ public class Bswabe {
 		BswabePrvComp c;
 		Element s, t;
 
-		c = prv.comps.get(p.attri);
+		c = prv.comps.get(p.attri - 1); //TODO: check if -1 is always correct
 
 		s = pub.p.getGT().newElement();
 		t = pub.p.getGT().newElement();
@@ -455,7 +455,9 @@ public class Bswabe {
 			p.cp = pairing.getG2().newElement();
 
 			elementFromString(h, p.attr);
-			p.c = pub.g.powZn(p.q.coef[0]);
+			// p.c = pub.g.powZn(p.q.coef[0]); //TODO: powZn modifies pub.g! Check library for bug report
+			Element tmp = pub.g.duplicate();
+			p.c = tmp.powZn(p.q.coef[0]); 			
 			p.cp = h.powZn(p.q.coef[0]);
 		} else {
 			for (i = 0; i < p.children.length; i++) {
@@ -475,7 +477,7 @@ public class Bswabe {
 		t = r.duplicate();
 
 		r.setToZero();
-		t.setToZero();
+		t.setToOne();
 
 		for (i = 0; i < q.deg + 1; i++) {
 			/* r += q->coef[i] * t */
