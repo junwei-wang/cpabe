@@ -421,7 +421,7 @@ public class Bswabe {
 				if (prvAttr.compareTo(p.attr) == 0) {
 					// System.out.println("=staisfy=");
 					p.satisfiable = true;
-					p.attri = 1;
+					p.attri = i;
 					break;
 				}
 			}
