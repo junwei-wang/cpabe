@@ -348,7 +348,9 @@ public class Bswabe {
 
 		for (i = 0; i < p.satl.size(); i++) {
 			lagrangeCoef(t, p.satl, (p.satl.get(i)).intValue());
-			expnew = exp.mul(t);
+			Element tmp = exp.duplicate();
+			expnew = tmp.mul(t);
+			// expnew = exp.mul(t); //FIXME: exp was modified by "mul"
 			decNodeFlatten(r, expnew, p.children[p.satl.get(i) - 1], prv, pub);
 		}
 	}
