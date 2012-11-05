@@ -50,36 +50,21 @@ public class Bswabe {
 		alpha.setToRandom();
 		msk.beta.setToRandom();
 		pub.g.setToRandom();
-		// PrintArr("pub.g: ", pub.g.toBytes());
-		// PrintArr("pub.h: ", pub.h.toBytes());
 		pub.gp.setToRandom();
 
-		msk.g_alpha = pub.gp.powZn(alpha);
-		// PrintArr("pub.g: ", pub.g.toBytes());
-		// PrintArr("pub.h: ", pub.h.toBytes());
-		// PrintArr("msk.beta: ", msk.beta.toBytes());
-		// PrintArr("alpha: ", alpha.toBytes());
+		msk.g_alpha = pub.gp.duplicate();
+		msk.g_alpha.powZn(alpha);
 
-		beta_inv = pairing.getZr().newElement();
-		beta_inv = msk.beta.invert();
-		pub.f = pub.g.powZn(beta_inv);
+		beta_inv = msk.beta.duplicate();
+		beta_inv.invert();
+		pub.f = pub.g.duplicate();
+		pub.f.powZn(beta_inv);
 
-		pub.h = pub.g.powZn(msk.beta);
+		pub.h = pub.g.duplicate();
+		pub.h.powZn(msk.beta);
 
 		pub.g_hat_alpha = pairing.pairing(pub.g, msk.g_alpha);
-
-		// PrintArr("pub.g: ", pub.g.toBytes());
-		// PrintArr("pub.h: ", pub.h.toBytes());
-		// PrintArr("pub.gh: ", pub.gp.toBytes());
-		// PrintArr("pub.g_hat: ", pub.g_hat_alpha.toBytes());
 	}
-
-	// private static void PrintArr(String s, byte[] b) {
-	// System.out.print(s);
-	// for (byte i : b)
-	// System.out.print(i + " ");
-	// System.out.println();
-	// }
 
 	/*
 	 * Generate a private key with the given set of attributes.
@@ -99,11 +84,14 @@ public class Bswabe {
 
 		/* compute */
 		r.setToRandom();
-		g_r = pub.gp.powZn(r);
+		g_r = pub.gp.duplicate();
+		g_r.powZn(r);
 
-		prv.d = msk.g_alpha.mul(g_r);
-		beta_inv = msk.beta.invert();
-		prv.d = prv.d.powZn(beta_inv);
+		prv.d = msk.g_alpha.duplicate();
+		prv.d.mul(g_r);
+		beta_inv = msk.beta.duplicate();
+		beta_inv.invert();
+		prv.d.powZn(beta_inv);
 
 		int i, len = attrs.length;
 		prv.comps = new ArrayList<BswabePrvComp>();
@@ -122,10 +110,12 @@ public class Bswabe {
 			elementFromString(h_rp, comp.attr);
 			rp.setToRandom();
 
-			h_rp = h_rp.powZn(rp);
+			h_rp.powZn(rp);
 
-			comp.d = g_r.mul(h_rp);
-			comp.dp = pub.g.powZn(rp);
+			comp.d = g_r.duplicate();
+			comp.d.mul(h_rp);
+			comp.dp = pub.g.duplicate();
+			comp.dp.powZn(rp);
 
 			prv.comps.add(comp);
 		}
@@ -137,74 +127,90 @@ public class Bswabe {
      * Delegate a subset of attribute of an existing private key.
      */
     public static BswabePrv delegate(BswabePub pub, BswabePrv prv_src, String[] attrs_subset)
-        throws NoSuchAlgorithmException, IllegalArgumentException {
+            throws NoSuchAlgorithmException, IllegalArgumentException {
 
-        BswabePrv prv = new BswabePrv();
-        Element g_rt, rt, f_at_rt;
-        Pairing pairing;
+            BswabePrv prv = new BswabePrv();
+            Element g_rt, rt, f_at_rt;
+            Pairing pairing;
 
-        /* initialize */
-        pairing = pub.p;
-        prv.d = pairing.getG2().newElement();
+            /* initialize */
+            pairing = pub.p;
+            prv.d = pairing.getG2().newElement();
 
-        g_rt = pairing.getG2().newElement();
-        rt = pairing.getZr().newElement();
-        f_at_rt = pairing.getZr().newElement();
+            g_rt = pairing.getG2().newElement();
+            rt = pairing.getZr().newElement();
+            f_at_rt = pairing.getZr().newElement();
 
-        /* compute */
-        rt.setToRandom();
-        f_at_rt = pub.f.powZn(rt);
-        prv.d = prv_src.d.mul(f_at_rt);
+            /* compute */
+            rt.setToRandom();
+            f_at_rt = pub.f.duplicate();
+            f_at_rt.powZn(rt);
+            prv.d = prv_src.d.duplicate();
+            prv.d.mul(f_at_rt);
 
-        g_rt = pub.gp.powZn(rt);
+            g_rt = pub.gp.duplicate();
+            g_rt.powZn(rt);
 
-        int i, len = attrs_subset.length;
-        prv.comps = new ArrayList<BswabePrvComp>();
+            int i, len = attrs_subset.length;
+            prv.comps = new ArrayList<BswabePrvComp>();
 
-        for (i = 0; i < len; i++) {
-            BswabePrvComp comp = new BswabePrvComp();
-            Element h_rtp;
-            Element rtp;
+            for (i = 0; i < len; i++) {
+                BswabePrvComp comp = new BswabePrvComp();
+                Element h_rtp;
+                Element rtp;
 
-            comp.attr = attrs_subset[i];
+                comp.attr = attrs_subset[i];
 
-            BswabePrvComp comp_src = new BswabePrvComp();
-            boolean comp_src_init = false;
+                BswabePrvComp comp_src = new BswabePrvComp();
+                boolean comp_src_init = false;
 
-            for (int j = 0; j < prv_src.comps.size(); ++j) {
-                if (prv_src.comps.get(j).attr == comp.attr) {
-                    comp_src = prv_src.comps.get(j);
-                    comp_src_init = true;
-                    break;
+                for (int j = 0; j < prv_src.comps.size(); ++j) {
+                    if (prv_src.comps.get(j).attr == comp.attr) {
+                        comp_src = prv_src.comps.get(j);
+                        comp_src_init = true;
+                        break;
+                    }
                 }
+
+                if (comp_src_init == false) {
+                    throw new IllegalArgumentException("comp_src_init == false");
+                }
+
+                comp.d = pairing.getG2().newElement();
+                comp.dp = pairing.getG1().newElement();
+                h_rtp = pairing.getG2().newElement();
+                rtp = pairing.getZr().newElement();
+
+                elementFromString(h_rtp, comp.attr);
+                rtp.setToRandom();
+
+                h_rtp.powZn(rtp);
+
+    /*          Old code  
+     * 			comp.d = g_rt.mul(h_rtp);
+                comp.d = comp_src.d.mul(comp.d);
+
+                comp.dp = pub.g.powZn(rtp);
+                comp.dp = comp_src.dp.mul(comp.dp);
+    */
+                //FIXME: verify code
+                
+                // New code
+                comp.d = g_rt.duplicate();
+                comp.d.mul(h_rtp);
+                comp.d.mul(comp_src.d);
+
+                comp.dp = pub.g.duplicate();
+                comp.dp.powZn(rtp);
+                comp.dp.mul(comp_src.dp);
+                
+
+                prv.comps.add(comp);
             }
 
-            if (comp_src_init == false) {
-                throw new IllegalArgumentException();
-            }
-
-            comp.d = pairing.getG2().newElement();
-            comp.dp = pairing.getG1().newElement();
-            h_rtp = pairing.getG2().newElement();
-            rtp = pairing.getZr().newElement();
-
-            elementFromString(h_rtp, comp.attr);
-            rtp.setToRandom();
-
-            h_rtp = h_rtp.powZn(rtp);
-
-            comp.d = g_rt.mul(h_rtp);
-            comp.d = comp_src.d.mul(comp.d);
-
-            comp.dp = pub.g.powZn(rtp);
-            comp.dp = comp_src.dp.mul(comp.dp);
-
-            prv.comps.add(comp);
+            return prv;
         }
-
-        return prv;
-    }
-
+    
 	/*
 	 * Pick a random group element and encrypt it under the specified access
 	 * policy. The resulting ciphertext is returned and the Element given as an
@@ -247,10 +253,12 @@ public class Bswabe {
 		/* compute */
 		m.setToRandom();
 		s.setToRandom();
-		cph.cs = pub.g_hat_alpha.powZn(s);
-		cph.cs = cph.cs.mul(m);
+		cph.cs = pub.g_hat_alpha.duplicate();
+		cph.cs.powZn(s);
+		cph.cs.mul(m);
 
-		cph.c = pub.h.powZn(s);
+		cph.c = pub.h.duplicate();
+		cph.c.powZn(s);
 
 		fillPolicy(cph.p, pub, s);
 
@@ -278,7 +286,7 @@ public class Bswabe {
 
 		checkSatisfy(cph.p, prv);
 		if (!cph.p.satisfiable) {
-			System.out
+			System.err
 					.println("cannot decrypt, attributes in key do not satisfy policy");
 			beb.e = null;
 			beb.b = false;
@@ -292,8 +300,8 @@ public class Bswabe {
 		m = cph.cs.mul(t); /* num_muls++; */
 
 		t = pub.p.pairing(cph.c, prv.d);
-		t = t.invert();
-		m = m.mul(t);
+		t.invert();
+		m.mul(t);
 
 		beb.e = m;
 		beb.b = true;
@@ -324,18 +332,18 @@ public class Bswabe {
 		BswabePrvComp c;
 		Element s, t;
 
-		c = prv.comps.get(p.attri - 1); //TODO: check if -1 is always correct
+		c = prv.comps.get(p.attri);
 
 		s = pub.p.getGT().newElement();
 		t = pub.p.getGT().newElement();
 
 		s = pub.p.pairing(p.c, c.d); /* num_pairings++; */
 		t = pub.p.pairing(p.cp, c.dp); /* num_pairings++; */
-		t = t.invert();
-		s = s.mul(t); /* num_muls++; */
-		s = s.powZn(exp); /* num_exps++; */
+		t.invert();
+		s.mul(t); /* num_muls++; */
+		s.powZn(exp); /* num_exps++; */
 
-		r = r.mul(s); /* num_muls++; */
+		r.mul(s); /* num_muls++; */
 	}
 
 	private static void decInternalFlatten(Element r, Element exp,
@@ -348,9 +356,8 @@ public class Bswabe {
 
 		for (i = 0; i < p.satl.size(); i++) {
 			lagrangeCoef(t, p.satl, (p.satl.get(i)).intValue());
-			Element tmp = exp.duplicate();
-			expnew = tmp.mul(t);
-			// expnew = exp.mul(t); //FIXME: exp was modified by "mul"
+			expnew = exp.duplicate();
+			expnew.mul(t);
 			decNodeFlatten(r, expnew, p.children[p.satl.get(i) - 1], prv, pub);
 		}
 	}
@@ -367,17 +374,16 @@ public class Bswabe {
 			if (j == i)
 				continue;
 			t.set(-j);
-			r = r.mul(t); /* num_muls++; */
+			r.mul(t); /* num_muls++; */
 			t.set(i - j);
-			t = t.invert();
-			r = r.mul(t); /* num_muls++; */
+			t.invert();
+			r.mul(t); /* num_muls++; */
 		}
 	}
 
 	private static void pickSatisfyMinLeaves(BswabePolicy p, BswabePrv prv) {
 		int i, k, l, c_i;
 		int len;
-		BswabePolicy curCompPol;
 		ArrayList<Integer> c = new ArrayList<Integer>();
 
 		if (p.children == null || p.children.length == 0)
@@ -391,10 +397,9 @@ public class Bswabe {
 			for (i = 0; i < len; i++)
 				c.add(new Integer(i));
 
-			curCompPol = p;
-			Collections.sort(c, new IntegerComparator(curCompPol));
+			Collections.sort(c, new IntegerComparator(p));
 
-			// p.satl = new String[];
+			p.satl = new ArrayList<Integer>();
 			p.min_leaves = 0;
 			l = 0;
 
@@ -457,10 +462,10 @@ public class Bswabe {
 			p.cp = pairing.getG2().newElement();
 
 			elementFromString(h, p.attr);
-			// p.c = pub.g.powZn(p.q.coef[0]); //TODO: powZn modifies pub.g! Check library for bug report
-			Element tmp = pub.g.duplicate();
-			p.c = tmp.powZn(p.q.coef[0]); 			
-			p.cp = h.powZn(p.q.coef[0]);
+			p.c = pub.g.duplicate();;
+			p.c.powZn(p.q.coef[0]); 	
+			p.cp = h.duplicate();
+			p.cp.powZn(p.q.coef[0]);
 		} else {
 			for (i = 0; i < p.children.length; i++) {
 				r.set(i + 1);
@@ -483,11 +488,12 @@ public class Bswabe {
 
 		for (i = 0; i < q.deg + 1; i++) {
 			/* r += q->coef[i] * t */
-			s = q.coef[i].mul(t);
-			r = r.add(s);
+			s = q.coef[i].duplicate();
+			s.mul(t); 
+			r.add(s);
 
 			/* t *= x */
-			t = t.mul(x);
+			t.mul(x);
 		}
 
 	}
@@ -609,7 +615,8 @@ public class Bswabe {
 			k = policy.children[o1.intValue()].min_leaves;
 			l = policy.children[o2.intValue()].min_leaves;
 
-			return (k <= l) ? 0 : 1;
+			return	k < l ? -1 : 
+					k == l ? 0 : 1;
 		}
 	}
 }
