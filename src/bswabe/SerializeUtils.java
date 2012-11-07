@@ -110,7 +110,7 @@ public class SerializeUtils {
 		ArrayList<Byte> arrlist = new ArrayList<Byte>();
 	
 		serializeElement(arrlist, msk.beta);
-		serializeElement(arrlist, msk.beta);
+		serializeElement(arrlist, msk.g_alpha);
 	
 		return Byte_arr2byte_arr(arrlist);
 	}
