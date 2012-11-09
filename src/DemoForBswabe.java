@@ -1,4 +1,12 @@
-package bswabe;
+
+
+import bswabe.Bswabe;
+import bswabe.BswabeCph;
+import bswabe.BswabeCphKey;
+import bswabe.BswabeElementBoolean;
+import bswabe.BswabeMsk;
+import bswabe.BswabePrv;
+import bswabe.BswabePub;
 
 public class DemoForBswabe {
 	final static boolean DEBUG = true;
@@ -368,6 +376,7 @@ public class DemoForBswabe {
 		BswabeMsk msk = new BswabeMsk();
 		BswabePrv prv, prv_delegate_ok, prv_delegate_ko;
 		BswabeCph cph;
+		BswabeElementBoolean result;
 
 		//attr = attr_kevin;
 		//attr = attr_sara;
@@ -377,45 +386,54 @@ public class DemoForBswabe {
 		Bswabe.setup(pub, msk);
 		println("//demo for bswabe: end to setup");
 
-		println("//demo for bswabe: start to keygen");
+		println("\n//demo for bswabe: start to keygen");
 		prv = Bswabe.keygen(pub, msk, attr);
 		println("//demo for bswabe: end to keygen");
 
-		println("//demo for bswabe: start to delegate_ok");
+		println("\n//demo for bswabe: start to delegate_ok");
 		prv_delegate_ok = Bswabe.delegate(pub, prv, attr_delegate_ok);
 		println("//demo for bswabe: end to delegate_ok");
 
-		println("//demo for bswabe: start to delegate_ko");
+		println("\n//demo for bswabe: start to delegate_ko");
 		prv_delegate_ko = Bswabe.delegate(pub, prv, attr_delegate_ko);
 		println("//demo for bswabe: end to delegate_ko");
 
-		println("//demo for bswabe: start to enc");
-		cph = Bswabe.enc(pub, policy).cph;
+		println("\n//demo for bswabe: start to enc");
+		BswabeCphKey crypted = Bswabe.enc(pub, policy);
+		cph = crypted.cph;
 		println("//demo for bswabe: end to enc");
 
-		println("//demo for bswabe: start to dec");
-		boolean res = Bswabe.dec(pub, prv, cph).b;
+		println("\n//demo for bswabe: start to dec");
+		result = Bswabe.dec(pub, prv, cph);
 		println("//demo for bswabe: end to dec");
-		if (res)
-			System.out.println("succeed in decrpt");
+		if ((result.b == true) && (result.e.equals(crypted.key) == true))
+			System.out.println("succeed in decrypt");
 		else
-			System.out.println("failed to decrpting");
+			System.err.println("failed to decrypting");
 
-		println("//demo for bswabe: start to dec with ok delegated key");
-		res = Bswabe.dec(pub, prv_delegate_ok, cph).b;
+		println("\n//demo for bswabe: start to dec with ok delegated key");
+		result = Bswabe.dec(pub, prv_delegate_ok, cph);
 		println("//demo for bswabe: end to dec with ok delegated key");
-		if (res)
-		    System.out.println("succeed in decript with ok delegated key");
+		if ((result.b == true) && (result.e.equals(crypted.key) == true))
+		    System.out.println("succeed in decrypt with ok delegated key");
 		else
-		    System.out.println("failed to decripting with ok delegated key");
+		    System.err.println("failed to decrypting with ok delegated key");
 
-		println("//demo for bswabe: start to dec with ko delegated key");
-		res = Bswabe.dec(pub, prv_delegate_ko, cph).b;
-		println("//demo for bswabe: end to dec with ko delegated key");
-		if (res)
-		    System.out.println("succeed in decript with ko delegated key");
+		println("\n//demo for bswabe: start to dec");
+		result = Bswabe.dec(pub, prv, cph);
+		println("//demo for bswabe: end to dec");
+		if ((result.b == true) && (result.e.equals(crypted.key) == true))
+			System.out.println("succeed in decrypt");
 		else
-		    System.out.println("failed to decripting with ko delegated key");
+			System.err.println("failed to decrypting");
+
+		println("\n//demo for bswabe: start to dec with ko delegated key");
+		result = Bswabe.dec(pub, prv_delegate_ko, cph);
+		println("//demo for bswabe: end to dec with ko delegated key");
+		if ((result.b == true) && (result.e.equals(crypted.key) == true))
+		    System.err.println("succeed in decrypt with ko delegated key (should not happen)");
+		else
+		    System.out.println("failed to decrypting with ko delegated key");
 	}
 
 	private static void println(Object o) {

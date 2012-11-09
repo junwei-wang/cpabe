@@ -399,7 +399,7 @@ public class DemoForCpabe {
 			+ "1of2 executive_level_ge_2^04 executive_level_ge_2^08 executive_level_ge_2^16 executive_level_ge_2^32 1of5 audit_group strategy_team 2of3 business_staff 2of2 1of2";
 
 	static String student_attr = "objectClass:inetOrgPerson objectClass:organizationalPerson "
-			+ "sn:student3 cn:student2 uid:student2 userPassword:student2 "
+			+ "sn:student2 cn:student2 uid:student2 userPassword:student2 "
 			+ "ou:idp o:computer mail:student2@sdu.edu.cn title:student";
 
 	static String student_policy = "sn:student2 cn:student2 uid:student2 3of3";
@@ -409,7 +409,7 @@ public class DemoForCpabe {
 		// attr = attr_kevin;
 		// attr = attr_sara;
 		// policy = policy_kevin_or_sara;
-		// attr_str = array2Str(attr);
+		//attr_str = array2Str(attr);
 
 		attr_str = student_attr;
 		policy = student_policy;

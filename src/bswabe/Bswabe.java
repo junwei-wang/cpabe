@@ -148,7 +148,7 @@ public class Bswabe {
             prv.d = prv_src.d.duplicate();
             prv.d.mul(f_at_rt);
 
-            g_rt = pub.gp.duplicate();
+            g_rt = pub.g.duplicate();
             g_rt.powZn(rt);
 
             int i, len = attrs_subset.length;
@@ -186,22 +186,12 @@ public class Bswabe {
 
                 h_rtp.powZn(rtp);
 
-    /*          Old code  
-     * 			comp.d = g_rt.mul(h_rtp);
-                comp.d = comp_src.d.mul(comp.d);
-
-                comp.dp = pub.g.powZn(rtp);
-                comp.dp = comp_src.dp.mul(comp.dp);
-    */
-                //FIXME: verify code
-                
-                // New code
                 comp.d = g_rt.duplicate();
                 comp.d.mul(h_rtp);
                 comp.d.mul(comp_src.d);
 
                 comp.dp = pub.g.duplicate();
-                comp.dp.powZn(rtp);
+                comp.dp.powZn(rtp); 
                 comp.dp.mul(comp_src.dp);
                 
 
@@ -254,11 +244,11 @@ public class Bswabe {
 		m.setToRandom();
 		s.setToRandom();
 		cph.cs = pub.g_hat_alpha.duplicate();
-		cph.cs.powZn(s);
-		cph.cs.mul(m);
+		cph.cs.powZn(s); /* num_exps++; */
+		cph.cs.mul(m); /* num_muls++; */
 
 		cph.c = pub.h.duplicate();
-		cph.c.powZn(s);
+		cph.c.powZn(s); /* num_exps++; */
 
 		fillPolicy(cph.p, pub, s);
 
@@ -297,11 +287,12 @@ public class Bswabe {
 
 		decFlatten(t, cph.p, prv, pub);
 
-		m = cph.cs.mul(t); /* num_muls++; */
+		m = cph.cs.duplicate();
+		m.mul(t); /* num_muls++; */
 
 		t = pub.p.pairing(cph.c, prv.d);
 		t.invert();
-		m.mul(t);
+		m.mul(t); /* num_muls++; */
 
 		beb.e = m;
 		beb.b = true;
