@@ -77,6 +77,7 @@ public class Cpabe {
 		keyCph = Bswabe.enc(pub, policy);
 		cph = keyCph.cph;
 		m = keyCph.key;
+		System.err.println("m = " + m.toString());
 
 		if (cph == null) {
 			System.out.println("Error happed in enc");
@@ -89,12 +90,12 @@ public class Cpabe {
 		plt = Common.suckFile(inputfile);
 		aesBuf = AESCoder.encrypt(m.toBytes(), plt);
 		// PrintArr("element: ", m.toBytes());
-		Common.writeCpabeFile(encfile, m.toBytes(), cphBuf, aesBuf);
+		Common.writeCpabeFile(encfile, cphBuf, aesBuf);
 	}
 
 	public void dec(String pubfile, String prvfile, String encfile,
 			String decfile) throws Exception {
-		byte[] aesBuf, cphBuf, mBuf;
+		byte[] aesBuf, cphBuf;
 		byte[] plt;
 		byte[] prv_byte;
 		byte[] pub_byte;
@@ -111,7 +112,6 @@ public class Cpabe {
 		tmp = Common.readCpabeFile(encfile);
 		aesBuf = tmp[0];
 		cphBuf = tmp[1];
-		mBuf = tmp[2];
 		cph = SerializeUtils.bswabeCphUnserialize(pub, cphBuf);
 
 		/* get BswabePrv form prvfile */
@@ -119,11 +119,9 @@ public class Cpabe {
 		prv = SerializeUtils.unserializeBswabePrv(pub, prv_byte);
 
 		BswabeElementBoolean beb = Bswabe.dec(pub, prv, cph);
+		System.err.println("e = " + beb.e.toString());
 		if (beb.b) {
-			// the right way
-			// plt = AESCoder.decrypt(beb.e.toBytes(), aesBuf);
-			// the wrong way
-			plt = AESCoder.decrypt(mBuf, aesBuf);
+			plt = AESCoder.decrypt(beb.e.toBytes(), aesBuf);
 			Common.spitFile(decfile, plt);
 		} else {
 			System.exit(0);

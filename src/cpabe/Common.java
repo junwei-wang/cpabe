@@ -28,15 +28,10 @@ public class Common {
 	}
 
 
-	public static void writeCpabeFile(String encfile, byte[] mBuf,
+	public static void writeCpabeFile(String encfile,
 			byte[] cphBuf, byte[] aesBuf) throws IOException {
 		int i;
 		OutputStream os = new FileOutputStream(encfile);
-
-		/* write m_buf */
-		for (i = 3; i >= 0; i--)
-			os.write(((mBuf.length & (0xff << 8 * i)) >> 8 * i));
-		os.write(mBuf);
 
 		/* write aes_buf */
 		for (i = 3; i >= 0; i--)
@@ -55,15 +50,8 @@ public class Common {
 	public static byte[][] readCpabeFile(String encfile) throws IOException {
 		int i, len;
 		InputStream is = new FileInputStream(encfile);
-		byte[][] res = new byte[3][];
-		byte[] mBuf, aesBuf, cphBuf;
-
-		/* read m buf */
-		len = 0;
-		for (i = 3; i >= 0; i--)
-			len |= is.read() << (i * 8);
-		mBuf = new byte[len];
-		is.read(mBuf);
+		byte[][] res = new byte[2][];
+		byte[] aesBuf, cphBuf;
 
 		/* read aes buf */
 		len = 0;
@@ -85,7 +73,6 @@ public class Common {
 
 		res[0] = aesBuf;
 		res[1] = cphBuf;
-		res[2] = mBuf;
 		return res;
 	}
 	/**
