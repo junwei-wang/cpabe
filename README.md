@@ -15,13 +15,14 @@ the project homepage:
 Your mush be responsible for the problem caused by using the code.
 
 Contribution on this project is welcome! Don't be shy to improve this project
-and help more people. 
+and help more people.
 
 
-Citation:
+### Citation
 
-   Junwei Wang. *Java Realization for Ciphertext-Policy Attribute-Based Encryption.* https://github.com/junwei-wang/cpabe/, 2012
+> Junwei Wang. *Java Realization for Ciphertext-Policy Attribute-Based Encryption.* https://github.com/junwei-wang/cpabe/, 2012
 
+or
 
 ```tex
 @article{wang2012java,
