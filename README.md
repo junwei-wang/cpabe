@@ -10,7 +10,7 @@ following page:
 For more information on CP-ABE and a tutorial on using the tools, see
 the project homepage:
 
-   https://github.com/junwei-wang/cpabe
+   https://junwei.co/cpabe/
 
 Your mush be responsible for the problem caused by using the code.
 
