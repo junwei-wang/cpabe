@@ -8,10 +8,7 @@ Building CPABE
 
 
 ## Build
-
-1. Copy `jpbc-api-${version}.jar`,`jpbc-plaf-${version}`.jar to `cpabe-api/lib`
-   where version=1.2.1.
-2. Build the package `mvn package`.
+`mvn package`.
 
 ## Demo
 
