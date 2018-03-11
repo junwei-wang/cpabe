@@ -8,18 +8,17 @@
     <parent>
         <groupId>co.junwei.cpabe</groupId>
         <artifactId>cpabe</artifactId>
-        <version>1.0</version>
+        <version>1.0.2</version>
     </parent>
 
     <groupId>co.junwei.cpabe</groupId>
     <artifactId>cpabe-demo</artifactId>
-    <version>1.0</version>
 
     <dependencies>
         <dependency>
             <groupId>co.junwei.cpabe</groupId>
             <artifactId>cpabe-api</artifactId>
-            <version>1.0</version>
+            <version>${version}</version>
         </dependency>
     </dependencies>
 

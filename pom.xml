@@ -6,7 +6,7 @@
 
     <groupId>co.junwei.cpabe</groupId>
     <artifactId>cpabe</artifactId>
-    <version>1.0</version>
+    <version>1.0.2</version>
     <packaging>pom</packaging>
 
     <name>CPABE</name>
