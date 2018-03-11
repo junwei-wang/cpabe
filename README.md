@@ -2,7 +2,7 @@ This software is a Java realization for "ciphertext-policy attribute based
 encryption" (CP-ABE).
 
 To use this software, you will need to have the Java Pairing Based Cryptography
-Library(jPBC) installed (jpbc-1.2.0 is tested). You can get it from the
+Library(jPBC) installed (jpbc-1.2.1 is tested). You can get it from the
 following page:
 
    http://gas.dia.unisa.it/projects/jpbc/

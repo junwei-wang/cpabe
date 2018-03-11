@@ -9,7 +9,7 @@ Building CPABE
 
 ## Build
 
-1. Copy `jpbc-api-${version}.jar`,`jpbc-plaf-${version}`.jar to cpabe-api/lib
+1. Copy `jpbc-api-${version}.jar`,`jpbc-plaf-${version}`.jar to `cpabe-api/lib`
    where version >= 1.2.1.
 2. Build the package `mvn package`.
 
@@ -24,3 +24,7 @@ java -cp "jars/*" co.junwei.bswabe.Demo
 ```
 java -cp "jars/*" co.junwei.cpabe.Demo
 ```
+
+## Get CPABE into Your Project
+
+Check out [JitPack](https://jitpack.io/#junwei-wang/cpabe/)
