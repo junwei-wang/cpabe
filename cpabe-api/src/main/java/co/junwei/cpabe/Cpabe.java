@@ -1,23 +1,23 @@
-package cpabe;
+package co.junwei.cpabe;
+import co.junwei.cpabe.policy.LangPolicy;
 import it.unisa.dia.gas.jpbc.Element;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 
-import cpabe.policy.LangPolicy;
-import bswabe.Bswabe;
-import bswabe.BswabeCph;
-import bswabe.BswabeCphKey;
-import bswabe.BswabeElementBoolean;
-import bswabe.BswabeMsk;
-import bswabe.BswabePrv;
-import bswabe.BswabePub;
-import bswabe.SerializeUtils;
+import co.junwei.bswabe.Bswabe;
+import co.junwei.bswabe.BswabeCph;
+import co.junwei.bswabe.BswabeCphKey;
+import co.junwei.bswabe.BswabeElementBoolean;
+import co.junwei.bswabe.BswabeMsk;
+import co.junwei.bswabe.BswabePrv;
+import co.junwei.bswabe.BswabePub;
+import co.junwei.bswabe.SerializeUtils;
 
 public class Cpabe {
 
 	/**
-	 * @param args
+	 * @param
 	 * @author Junwei Wang(wakemecn@gmail.com)
 	 */
 

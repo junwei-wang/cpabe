@@ -1,15 +1,17 @@
-import cpabe.Cpabe;
+package co.junwei.cpabe;
 
-public class DemoForCpabe {
+public class Demo {
 	final static boolean DEBUG = true;
 
-	static String pubfile = "file_dir/pub_key";
-	static String mskfile = "file_dir/master_key";
-	static String prvfile = "file_dir/prv_key";
+	static String dir = "demo/cpabe";
 
-	static String inputfile = "file_dir/input.pdf";
-	static String encfile = "file_dir/input.pdf.cpabe";
-	static String decfile = "file_dir/input.pdf.new";
+    static String pubfile = dir + "/pub_key";
+	static String mskfile = dir + "/master_key";
+	static String prvfile = dir + "/prv_key";
+
+	static String inputfile = dir + "/input.pdf";
+	static String encfile = dir + "/input.pdf.cpabe";
+	static String decfile = dir + "/input.pdf.new";
 
 	static String[] attr = { "baf1", "fim1", "foo" };
 	static String policy = "foo bar fim 2of3 baf 1of2";

@@ -1,4 +1,4 @@
-package bswabe;
+package co.junwei.bswabe;
 
 import it.unisa.dia.gas.jpbc.CurveParameters;
 import it.unisa.dia.gas.jpbc.Element;
