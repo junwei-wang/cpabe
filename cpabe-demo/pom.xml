@@ -18,7 +18,7 @@
         <dependency>
             <groupId>co.junwei.cpabe</groupId>
             <artifactId>cpabe-api</artifactId>
-            <version>${version}</version>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 

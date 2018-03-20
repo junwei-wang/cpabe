@@ -8,7 +8,9 @@ Building CPABE
 
 
 ## Build
-`mvn package`.
+```
+mvn package && script/mv_jars.sh
+```
 
 ## Demo
 
