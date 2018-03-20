@@ -1,5 +1,7 @@
 package co.junwei.bswabe;
 
+import co.junwei.bswabe.*;
+
 public class Demo {
 	final static boolean DEBUG = true;
 
